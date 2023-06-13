@@ -302,18 +302,7 @@ const initializePawn = ()=>
             setExcerptState(playerPositions[positionConfig.initCellPos].info.quote[0].name);
             setPostName(playerPositions[positionConfig.initCellPos].info.name);
             setDiceFace(Dice7);
-            // console.log("Dice Roll :: "+dice.current.currentRoll);
-            // console.log("Dice Face :: "+ savedData.diceFace);
-            // if(savedData.diceFace==7 || savedData.diceFace==8)
-            // {
-            //   // console.log(dice.current.iDiceFace);
-            //   setDiceFace(diceImage[dice.current.currentRoll].imageurl);
-            //  }
-            // else
-            // {
-            //   // console.log("Here")
-            //   setDiceFace(diceImage[6].imageurl);
-            // }
+            dice.current.iDiceFace=Dice7;
       }
       else
       {
@@ -336,7 +325,8 @@ const initializePawn = ()=>
             }).start();
             setExcerptState(playerPositions[player.current.position].info.quote[0].name);
             setPostName(playerPositions[player.current.position].info.name);
-            setDiceFace(savedData.diceFace);
+            setDiceFace(savedData.dice.iDiceFace);
+            dice.current.iDiceFace=savedData.dice.iDiceFace;
       }
   });
  
@@ -372,7 +362,7 @@ const stateChangePawn = ()=>
 
   // 
   const diceRoll=()=>{
-    console.log(diceFace);
+    // console.log(diceFace);
     if(!isRotating)
     {
       setRotation(!isRotating);
@@ -422,15 +412,16 @@ const stateChangePawn = ()=>
     if(iSnakeLadderBase.current==0)
     {
       dice.current.currentRoll=dice.current.iDiceCurrentRoll-1;
-      // console.log(diceImage[dice.current.iDiceCurrentRoll-1].imageurl);
+      // console.log("inside if statement");
       setDiceFace(diceImage[dice.current.iDiceCurrentRoll-1].imageurl)
       dice.current.iDiceFace=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
       
     }
     else
     {
-      console.log('asjdlkasdsalk');
+      // console.log('inside else statement'+ diceImage[6].imageurl);
       setDiceFace(diceImage[6].imageurl)
+      dice.current.iDiceFace=diceImage[6].imageurl
     }
     sound.current="dice_rolling.mp3";
     initiatePawnMovement();
@@ -514,19 +505,20 @@ const stateChangePawn = ()=>
     if(iSnakeLadderBase.current>0)
     {
     
-      setDiceFace(diceImage[8].imageurl)
+      setDiceFace(diceImage[8].imageurl);
+      dice.current.iDiceFace=diceImage[8].imageurl;
       
     }
     else if(iSnakeLadderBase.current < 0)
     {
       
-      setDiceFace(diceImage[7].imageurl)
-      
+      setDiceFace(diceImage[7].imageurl);
+      dice.current.iDiceFace=diceImage[7].imageurl;
     }
     else
     {
       setDiceFace(diceImage[6].imageurl)
-      
+      dice.current.iDiceFace=diceImage[6].imageurl;
     }
     postIdCellMovement.current=playerPositions[player.current.position].postID;
     saveStatesFunc(playerPositions[player.current.position].info.name);
@@ -544,7 +536,16 @@ const stateChangePawn = ()=>
   };
 
   const movePawnNextCell=()=>{
-    
+    // console.log("movePawnNextCell"+iSnakeLadderBase.current);
+    if(iSnakeLadderBase.current>0)
+    {
+      dice.current.iDiceFace=diceImage[8].imageurl;
+      
+    }
+    else if(iSnakeLadderBase.current < 0)
+    {
+      dice.current.iDiceFace=diceImage[7].imageurl;
+    }
     playerPositionX.current=playerPositions[player.current.position].x;
     playerPositionY.current=playerPositions[player.current.position].y;
 
@@ -573,7 +574,7 @@ const stateChangePawn = ()=>
   };
 
   const movePawnToCell=()=>{
-    
+    // console.log("movePawnToCell");
     playerPositionX.current=playerPositions[player.current.targetPosition].x;
     playerPositionY.current=playerPositions[player.current.targetPosition].y;
     
@@ -595,8 +596,13 @@ const stateChangePawn = ()=>
   var bufferPlayerMoves=[];
   var device={deviceID:"",manufacturer:"",model:"",timeZone:"",nativeLang:"",date:""};
   const saveStatesFunc =async(postName)=>{
-
-    saveStates.dice=dice.current;
+    console.log("///////////////");
+      console.log(dice.current);
+      // console.log("///////////////");
+      // console.log(player.current);
+      // console.log("///////////////");
+      // console.log(diceFace);
+      saveStates.dice=dice.current;
       saveStates.player=player.current;
       saveStates.iCurrent_state=iCurrent_state.current;
       saveStates.iDisplacement=iDisplacement.current;

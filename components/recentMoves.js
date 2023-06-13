@@ -6,6 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from "./loader";
 import '../globalVariables';
 import { TouchableWithoutFeedback } from "react-native";
+import Dice1 from "../assets/game/dice/updated/dice1.png";
+import Dice2 from "../assets/game/dice/updated/dice2.png";
+import Dice3 from "../assets/game/dice/updated/dice3.png";
+import Dice4 from "../assets/game/dice/updated/dice4.png";
+import Dice5 from "../assets/game/dice/updated/dice5.png";
+import Dice6 from "../assets/game/dice/updated/dice6.png";
+import Dice7 from "../assets/game/dice/updated/dice7.png";
+import Dice8 from "../assets/game/dice/updated/dice8.png";
+import Dice9 from "../assets/game/dice/updated/dice9.png";
 
 const RecentMoves=(props)=>{
       
@@ -29,10 +38,12 @@ const RecentMoves=(props)=>{
 
     async function getLastMoveData(data) { 
       var arr=[];
-      var storageData = await AsyncStorage.getItem('@playerMove');
+      var storageData = await  getData('@playerMove');
       storageData=JSON.parse(storageData);
       storageData.slice().reverse().forEach(element => {
-          let obj={name:element.postName,cellNo:element.player.position};
+        // console.log(element)
+          let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace};
+          console.log(obj);
           arr.push(obj);
       });
         setCellsContains(arr);
@@ -153,13 +164,11 @@ const cellInformaion=(index)=>{
                       </View>
                   </View>
                 </View>
-                
-
             }
             {
               rowTapped &&
               <View>
-                
+                <Image source={diceFace} style={{width:"95%",height:"100%"}} resizeMode="contain"/>
               </View>
             }
                   
