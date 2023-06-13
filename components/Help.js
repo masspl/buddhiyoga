@@ -151,22 +151,6 @@ const Help = ({navigation}) =>{
           </View>
         </View>  
         </ScrollView>
-        {/* <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, currentPage === 0 && styles.disabledButton]}
-          onPress={goToPrevious}
-          disabled={currentPage === 0}
-        >
-          <Text style={styles.buttonText}>Previous</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, currentPage === styles.disabledButton]}
-          onPress={goToNext}
-          disabled={currentPage === images.length - 1}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
-      </View> */}
         </View>
         
         </SafeAreaView>
