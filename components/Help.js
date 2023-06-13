@@ -143,30 +143,40 @@ const Help = ({navigation}) =>{
           </View>
          </View>
          <View style={{paddingHorizontal: 15, paddingVertical: 35}}>
-            {/* <Text style={{color: 'rgba(88, 44, 36,0.5)', lineHeight: 20}}>
-               {/* 1) Reset Button sends marker back to Vaikuntha. {'\n'}{'\n'}
-               2) Tap to see the cells visited.{'\n'}{'\n'} */}
-            {/* </Text> */} 
+          
             <Image source={require('../assets/other/howtoplatimages/4c.jpg')} style={{width: Dimensions.get('window').width-50, height: 500, resizeMode: 'contain'}} />
           </View>
         </View>  
+        <View style={{width: width-20, height: height-55, backgroundColor: '#fff', borderColor: 'rgba(0,0,0,0.2)', borderWidth: 1,}}>
+          <View style={{flexDirection: 'row', borderBottomColor: 'rgba(0,0,0,0.2)', borderBottomWidth: 1, padding: 10}}>
+          <Image source={require('../assets/login/buddhiyoga_logo.png')} style={{width: 50, height: 50, marginRight: 15}} />
+          <View style={{flexDirection: 'column'}}>
+            <Text style={{fontSize: 16, fontWeight: '500', color: 'rgba(88, 44, 36,1)', lineHeight: 25}}>Buddhiyoga</Text>
+            <Text style={{color: 'rgba(88, 44, 36,0.5)', lineHeight: 25}}>Cells Visited Information</Text>
+
+          </View>
+         </View>
+         <View style={{paddingHorizontal: 15, paddingVertical: 35}}>
+            
+            <Image source={require('../assets/other/howtoplatimages/5c.jpg')} style={{width: Dimensions.get('window').width-50, height: 550, resizeMode: 'contain'}} />
+          </View>
+        </View>  
+        <View style={{width: width-20, height: height-55, backgroundColor: '#fff', borderColor: 'rgba(0,0,0,0.2)', borderWidth: 1,}}>
+          <View style={{flexDirection: 'row', borderBottomColor: 'rgba(0,0,0,0.2)', borderBottomWidth: 1, padding: 10}}>
+          <Image source={require('../assets/login/buddhiyoga_logo.png')} style={{width: 50, height: 50, marginRight: 15}} />
+          <View style={{flexDirection: 'column'}}>
+            <Text style={{fontSize: 16, fontWeight: '500', color: 'rgba(88, 44, 36,1)', lineHeight: 25}}>Buddhiyoga</Text>
+            <Text style={{color: 'rgba(88, 44, 36,0.5)', lineHeight: 25}}>Cells Visited Information</Text>
+
+          </View>
+         </View>
+         <View style={{paddingHorizontal: 15, paddingVertical: 35}}>
+           
+            <Image source={require('../assets/other/howtoplatimages/6c.jpg')} style={{width: Dimensions.get('window').width-50, height: 600, resizeMode: 'contain'}} />
+          </View>
+        </View>  
         </ScrollView>
-        {/* <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, currentPage === 0 && styles.disabledButton]}
-          onPress={goToPrevious}
-          disabled={currentPage === 0}
-        >
-          <Text style={styles.buttonText}>Previous</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, currentPage === styles.disabledButton]}
-          onPress={goToNext}
-          disabled={currentPage === images.length - 1}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
-      </View> */}
+       
         </View>
         
         </SafeAreaView>
