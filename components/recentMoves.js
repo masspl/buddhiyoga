@@ -1,5 +1,5 @@
-import React,{useState,useEffect} from "react";
-import { Animated,Text,ScrollView,Easing,View, SafeAreaView,Dimensions,TouchableOpacity} from "react-native";
+import React,{useState,useEffect, useRef} from "react";
+import { Animated,Text,ScrollView,Easing,View, SafeAreaView,Dimensions,TouchableOpacity, Image, useWindowDimensions} from "react-native";
 import MagicComponentHeader from "./magicComponentHeader";
 import {AI_URL}  from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,8 +16,30 @@ const RecentMoves=(props)=>{
     const [fetched, setFetched] = useState(false);
     const [cellsContains,setCellsContains]=useState([]);
     const [Numbers,setNumbers]=useState(3);
-    const [rowTapped,setRowTapped]=useState(false);
+    // const [rowTapped,setRowTapped]=useState(false);
+    const [cellData,setCellData]=useState([]);
+    const [isRotating, setRotation] = useState(true);
+    const [isRotation, setisRotation] = useState(true);
+    const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
+   
+    const cellIndex = useRef();
+   
+    useEffect(()=>{
+       if(isRotating==true)
+       {
+        stopincreaseLengthFunction();
+       }
+       else
+       {
+        increaseLengthFunction();
+       }
+    },[isRotating]);
 
+    useEffect(()=>{
+         setRotation(!isRotation);
+    },[!isRotation]);
+
+    
     var playerPositions =require('../assets/game/buddhiyogaEngine.json');
 
     useEffect(()=>{
@@ -106,10 +128,48 @@ const getStorageData=async ()=>{
       setisLoading(false);
       }
 }
+
+  const increaseLengthFunction = () =>{
+    Animated.AnimatedInterpolation
+    Animated.timing(lengthValueHolder,{
+        toValue: 1,
+        duration: 500,
+        easing: Easing.linear,
+        useNativeDriver: false 
+    }).start();
+  }
+
+  const stopincreaseLengthFunction = () =>{
     
-const cellInformaion=(index)=>{
-  alert(playerPositions[index].info.name);
-}
+    Animated.AnimatedInterpolation
+    Animated.timing(lengthValueHolder,{
+        toValue: 0,
+        duration: 500,
+        easing: Easing.linear,
+        useNativeDriver: false 
+    }).start();
+  }
+
+  const lengthData = lengthValueHolder.interpolate({
+    inputRange: [0,1],
+    outputRange: [100, 0]
+  });
+
+  const viewLengthStyle={
+    height: lengthData
+  }
+      
+  const cellInformaion=(cellNo,index)=>{
+    cellIndex.current=index;
+    console.log(playerPositions[cellNo].info.quote[0].name);
+  
+    if(isRotating==true)
+    setisRotation(false);
+    setRotation(!isRotating);
+    // setRowTapped(true);
+    setCellData(playerPositions[cellNo].info.quote[0].name);
+  }
+
     const renderAiData = (
         <Animated.View style={[{height: 400,backgroundColor: '#fff', paddingHorizontal: 10,borderTopEndRadius: 20, borderTopStartRadius: 20, justifyContent: 'flex-start',flexDirection: 'column', flex: 1}]}>
         <Text style={{color: 'rgba(88, 44, 36,1)', fontSize: 20, fontWeight: 'bold', textAlign: 'center', borderBottomColor: 'rgba(88, 44, 36,0.2)', borderBottomWidth: 1,paddingBottom: 0, lineHeight: 50}}>A thought trail</Text>
@@ -130,16 +190,29 @@ const cellInformaion=(index)=>{
                   <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'center', flexWrap: 'wrap', padding: 0, width: '100%' }}>
 
                     {cellsContains.map((cell, index) => 
-                    <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo)}>
-                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, elevation: 10, shadowColor: '#b79972', marginVertical: 5 }}>
+                    <>
+                    <View style={{flexDirection: 'column', width: '100%', marginVertical: 5 }}>
+                    
+                    <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo,index)}>
                       
+                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, elevation: 10, shadowColor: '#b79972'}}>
+                     
                       <View style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '25%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
                         <Text style={{ fontSize: 12, color: '#fff' }}>Cell No</Text>
                         <Text style={{ fontSize: 25, color: '#fff' }}>{cell.cellNo}</Text>
                       </View>
                       <Text style={{ width: '75%', fontSize: 16, color: index >= Numbers ? 'rgba(88, 44, 36,1)' : '#fff', textTransform: 'capitalize', fontWeight: 'bold', textAlign: 'center', paddingHorizontal: 10, }}>{cell.name}</Text>
+                     
                     </View>
+                    
                     </TouchableWithoutFeedback>
+                    <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current==index ? viewLengthStyle : {height: 0}]}>
+                      <View style={{padding: 10,}}>
+                        <Text style={{color: '#000'}}>{cellData}</Text>
+                      </View>
+                    </Animated.View> 
+                    </View>
+                    </>
                     )}
                   </View>
                 </ScrollView>
@@ -157,15 +230,25 @@ const cellInformaion=(index)=>{
 
             }
             {
-              rowTapped &&
-              <View>
-                
-              </View>
+              //  rowTapped &&
+               <></>
+              // <View style={{width: width, height: height, position: 'absolute', zIndex: 1, backgroundColor: 'rgba(255,255,255,0.8)' ,flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+              //   <View style={{backgroundColor: '#fff', width: '90%', height: '65%', borderRadius: 15, borderColor: 'rgba(0,0,0,0.25)', borderWidth: 1}}>
+              //       <View style={{width: '100%', height: '15%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#D5C0A4'}}>
+              //         <Text style={{color: 'rgba(88, 44, 36,1)', fontSize: 20, textTransform: 'capitalize', fontWeight: '500'}}>{cellData}</Text>
+              //         <View style={{position: 'absolute', right: 10,}}>
+              //           <TouchableOpacity onPress={closeModal('hello')}>
+              //           <Image source={require("../assets/other/crossla.png")} style={{width: 30, height: 30, opacity: 0.8}} />
+              //           </TouchableOpacity>
+              //         </View>
+              //       </View>            
+              //   </View>
+              // </View>
             }
                   
                 </>
             :
-            <View>
+            <View style={{ height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
             <Loader/>
             </View>
         }
