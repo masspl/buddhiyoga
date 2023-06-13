@@ -1,13 +1,8 @@
 import React,{useState,useEffect} from "react";
 import { Animated,Text,ScrollView,Easing,View, SafeAreaView,Dimensions,TouchableOpacity} from "react-native";
 import MagicComponentHeader from "./magicComponentHeader";
-import {AI_URL,SAVE_CHATGPT_RESPONSE}  from '@env';
-import Hamburger from "./hamburger";
-import Postsheader from '../components/postsheader';
+import {AI_URL}  from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DeviceInfo from "react-native-device-info";
-import NetInfo from "@react-native-community/netinfo";
-// import LoadingSpinner from "./LoadingSpinner";
 import Loader from "./loader";
 import '../globalVariables';
 import { TouchableWithoutFeedback } from "react-native";
@@ -21,13 +16,10 @@ const RecentMoves=(props)=>{
     const [fetched, setFetched] = useState(false);
     const [cellsContains,setCellsContains]=useState([]);
     const [Numbers,setNumbers]=useState(3);
+    const [rowTapped,setRowTapped]=useState(false);
 
-    // useEffect(() => {
-    //         if(aiData.length >0){
-    //         storeChatGPTResponse()
-    //     }
-    // },[aiData.length]);
-    
+    var playerPositions =require('../assets/game/buddhiyogaEngine.json');
+
     useEffect(()=>{
         if(cellsContains.length <=0)
         {
@@ -43,55 +35,34 @@ const RecentMoves=(props)=>{
           let obj={name:element.postName,cellNo:element.player.position};
           arr.push(obj);
       });
-      // console.log(arr);
-      // var recentCellStr= arr.slice(0, Numbers); 
-      //   var prompt=JSON.stringify({"textToAI":recentCellStr, lang: global.config.GL_LANG_CODE});
         setCellsContains(arr);
       }
+    const getData = async (key) => {
+      try {
+        const value = await AsyncStorage.getItem(key);
+        if(value !== null) {
+          // value previously stored
+          return value;
+        }
+        else
+        {
+          return null;
+        }
+      } catch(e) {
+        // error reading value
+        console.log("Error While fetching Data")
+      }
+    }
 
-    //   async function storeChatGPTResponse()
-    //   {
+    const storeData = async (key,value) => {
+      try {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem(key, jsonValue)
+      } catch (e) {
+        // saving error
+      }
+    }
 
-    //     var recentCellStr= cellsContains.slice(0, Numbers);
-    //     var prompt=JSON.stringify({"textToAI":recentCellStr, lang: global.config.GL_LANG_CODE});
-    //     var deviceID="";
-    //     var aiResponse=aiData;
-    // NetInfo.fetch().then(async (state) => {
-    //   if(state.isConnected)
-    //   {
-    //     await DeviceInfo.getAndroidId().then((androidId) => {
-    //       deviceID=androidId;
-    //     });
-    //     let promptData=JSON.stringify({prompt:prompt, device:deviceID,response:aiResponse});
-    //     console.log(promptData);
-        
-    //       let data = {
-    //         method: 'POST',
-    //         credentials: 'same-origin',
-    //         mode: 'same-origin',
-    //         body: promptData,
-    //         headers: {
-    //           'Accept':       'application/json',
-    //           'Content-Type': 'application/json',
-    //         },
-    //       };
-    //       let response=  fetch("https://buddhiyoga.in/buddhiyogaapi/api/saveChatGPTResponseApi/",data)
-    //         .then(response => response.json())  // promise
-    //         .then(async(json) =>{
-    //           console.log(json);
-    //         //  if(json.code===200){
-    //         //   console.log("response saved successfully");
-    //         //  }
-    //         //  else if(json.code===-919){
-    //         //   console.error('Error');
-    //         //  }
-    //         })
-    //   }
-    //   else{
-    //     // alert("you are not connected to the server....");
-    //   }
-    // });
-    //   }
 const getStorageData=async ()=>{
     setClickedStatus(false);
       var recentCellStr= cellsContains.slice(0, Numbers);
@@ -111,6 +82,22 @@ const getStorageData=async ()=>{
             setaiData(responseData);
             setFetched(true);
             setisLoading(false);
+            var bufferPlayerMoves=[];
+            var bufferStates={};
+            var device={prompt:prompt,response:responseData};
+            bufferStates.aiRequest=device;
+            var bufferStorageData=await getData('@bufferPlayerMove');
+            if(bufferStorageData===null)
+              {
+                bufferPlayerMoves.push(bufferStates);
+                storeData('@bufferPlayerMove',bufferPlayerMoves);
+              }
+              else{
+                bufferStorageData=JSON.parse(bufferStorageData);
+                bufferStorageData.push(bufferStates);
+                storeData('@bufferPlayerMove',bufferStorageData);
+              }
+            
           })
           .done();
       } 
@@ -120,8 +107,8 @@ const getStorageData=async ()=>{
       }
 }
     
-const cellInformaion=()=>{
-  alert("Informaion");
+const cellInformaion=(index)=>{
+  alert(playerPositions[index].info.name);
 }
     const renderAiData = (
         <Animated.View style={[{height: 400,backgroundColor: '#fff', paddingHorizontal: 10,borderTopEndRadius: 20, borderTopStartRadius: 20, justifyContent: 'flex-start',flexDirection: 'column', flex: 1}]}>
@@ -143,7 +130,7 @@ const cellInformaion=()=>{
                   <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'center', flexWrap: 'wrap', padding: 0, width: '100%' }}>
 
                     {cellsContains.map((cell, index) => 
-                    <TouchableWithoutFeedback onPress={()=>cellInformaion()}>
+                    <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo)}>
                     <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, elevation: 10, shadowColor: '#b79972', marginVertical: 5 }}>
                       
                       <View style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '25%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
@@ -168,6 +155,12 @@ const cellInformaion=()=>{
                 </View>
                 
 
+            }
+            {
+              rowTapped &&
+              <View>
+                
+              </View>
             }
                   
                 </>

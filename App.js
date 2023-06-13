@@ -102,15 +102,7 @@ const App = (props)=> {
   var localeLangCode = locale.substring(0,2);
   console.log(localeLangCode);
 
-  // if(locale.includes('en'))
-  //   {
-  //     await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
-  //     await AsyncStorage.setItem("gameBoard", 'en'); 
-  //     global.config.GL_LANG_CODE='en';
-  //     global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
-  //   }
-  //   else 
-   switch (localeLangCode) {
+  switch (localeLangCode) {
       
       case 'bn':
        
@@ -158,23 +150,6 @@ const App = (props)=> {
           global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
           break;
    }  
-          
-  //   if(locale.includes('or'))
-  //   {
-  //     await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/");
-  //     await AsyncStorage.setItem("gameBoard", 'or');
-  //     global.config.GL_LANG_CODE='or';
-  //     global.config.GL_LANG_NAME='Odia';
-  //     global.config.POST_URL="https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/";
-  //   }
-  //   else
-  //   {
-  //     await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
-  //     await AsyncStorage.setItem("gameBoard", 'en'); 
-  //     global.config.GL_LANG_CODE='en';
-  //     global.config.GL_LANG_NAME='English';
-  //     global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
-  //   }
   }
 
   const Stack = createNativeStackNavigator();
@@ -227,13 +202,6 @@ const App = (props)=> {
            ),
            
         }}/>
-         {/* <Drawer.Screen name="Help" component={Help}  options={{
-           drawerIcon: ({focused, size}) => (
-            <Image source={require("./assets/other/settings.png")} style={{width:'12.3%',height:'110%'}}/>
-        
-           ),
-           
-        }}/> */}
     </Drawer.Navigator>
     )
   }

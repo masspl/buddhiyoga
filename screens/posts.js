@@ -7,7 +7,7 @@ import {
   View,
   ScrollView,
   Animated,
-  TouchableOpacity,TouchableWithoutFeedback,Share
+  Share
 } from 'react-native';
 
 import PostsPictureComponent from '../components/PostsPictureComponent';
@@ -17,7 +17,7 @@ import Postsheader from '../components/postsheader';
 import PostBottomSticky from '../components/postBottomStickyTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Posts= (props,{navigation}) => {
+const Posts= (props) => {
   console.log(props)
     const [postList, setPostList] = React.useState([]);
     const [postId,setPostId] = React.useState(props.route.params.postId);

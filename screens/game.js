@@ -27,7 +27,6 @@ import {
 } from 'react-native-gesture-handler';
 import {useAnimatedGestureHandler} from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { Link } from '@react-navigation/native';
 import '../globalVariables';
 
 import Dice1 from "../assets/game/dice/updated/dice1.png";
@@ -647,9 +646,6 @@ const stateChangePawn = ()=>
         bufferStorageData.push(bufferStates);
          storeData('@bufferPlayerMove',bufferStorageData);
       }
-      // console.log(postName);
-      console.log(storageData);
-      // console.log(typeof(bufferStorageData));
      if(storageData!=null && storageData.length >= 3) {
         setMagicStatus(true);
       }
@@ -733,7 +729,7 @@ const ChatGPT=()=>{
     //   }
     // };
 
-    handlePanGesture = Animated.event([{nativeEvent: 
+    const handlePanGesture = Animated.event([{nativeEvent: 
       {translationX: translateX,translationY:translateY}}], 
       { useNativeDriver: true });
 
@@ -795,7 +791,6 @@ const ChatGPT=()=>{
       ):(<View></View>)}
       </View>
       <View style={{
-      // position:'absolute',
       flex:1,
       flexDirection:"row",
       alignItems:'center',
@@ -809,7 +804,6 @@ const ChatGPT=()=>{
         
         width:45,
         height:45,
-        // backgroundColor:"rgba(88, 44, 36,1)",
         borderRadius:10,        
         transform: [{rotate: spin}]
     
@@ -836,11 +830,6 @@ const ChatGPT=()=>{
    </View>
  
     <View style={{ marginTop:'0%',width:"100%", height:"15%",justifyContent:'flex-end'}} >
-    {/* <View style={{justifyContent: 'center', flexDirection: 'row'}} >
-    <TouchableOpacity onPress={() => {ChatGPT()}} style={{justifyContent: 'center'}}>
-      <Text style={{textAlign: 'center', color: '#fff',backgroundColor: "rgba(88, 44, 36,1)", paddingHorizontal: 15, paddingVertical: 10, borderRadius: 20}}>ChatGPT</Text>
-      </TouchableOpacity>
-    </View> */}
    <BlockInformation setrotation={(e)=>setRotation(e)}rotation={isRotating} excerpt={excerpt} postName={postName} postId={postIdCellMovement.current} navigation={navigation} />        
    </View>
   

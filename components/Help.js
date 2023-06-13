@@ -1,41 +1,16 @@
 import React,{useState, useRef} from "react";
 import { View,Text,SafeAreaView, ScrollView,StyleSheet,Image, Dimensions,TouchableOpacity } from "react-native";
-// import Hamburger from './hamburger';
-import SlideContentSlider from "./SlideContentSlider";
 import Postsheader from './postsheader';
 
 const Help = ({navigation}) =>{
-  console.log(navigation);
   const {width, height} = Dimensions.get('window');
   const scrollViewRef = useRef();
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleScroll = (event) => {
-    // console.log(currentPage);
     var page = Math.round(event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width);
-    // console.log(event.nativeEvent.contentOffset.x+"/"+ event.nativeEvent.layoutMeasurement.width+"="+page);
     setCurrentPage(page);
   };
-  const goToPrevious = () => {
-    
-    setCurrentPage(currentPage - 1);
-   
-    // const offset = (Dimensions.get('window').width-20) * currentPage ;
-    // scrollViewRef.current.scrollTo({ x: offset, y: 0, animated: true });
-   
-    console.log(currentPage);
-  };
-
-  const goToNext = () => {
-    
-    setCurrentPage(currentPage + 1);
-   
-    // const offset = (Dimensions.get('window').width-20) * currentPage ;
-    // scrollViewRef.current.scrollTo({ x: offset, y: 0, animated: true });
-   
-    console.log(currentPage);
-  };
-
   const handleSwipe = (pageIndex) => {
     console.log(currentPage);
     if (scrollViewRef.current) {
@@ -143,30 +118,10 @@ const Help = ({navigation}) =>{
           </View>
          </View>
          <View style={{paddingHorizontal: 15, paddingVertical: 35}}>
-            {/* <Text style={{color: 'rgba(88, 44, 36,0.5)', lineHeight: 20}}>
-               {/* 1) Reset Button sends marker back to Vaikuntha. {'\n'}{'\n'}
-               2) Tap to see the cells visited.{'\n'}{'\n'} */}
-            {/* </Text> */} 
             <Image source={require('../assets/other/howtoplatimages/4c.jpg')} style={{width: Dimensions.get('window').width-50, height: 500, resizeMode: 'contain'}} />
           </View>
         </View>  
         </ScrollView>
-        {/* <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, currentPage === 0 && styles.disabledButton]}
-          onPress={goToPrevious}
-          disabled={currentPage === 0}
-        >
-          <Text style={styles.buttonText}>Previous</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, currentPage === styles.disabledButton]}
-          onPress={goToNext}
-          disabled={currentPage === images.length - 1}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
-      </View> */}
         </View>
         
         </SafeAreaView>
