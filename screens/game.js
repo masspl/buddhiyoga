@@ -59,7 +59,6 @@ const Game= ({navigation}) => {
   const sound=useRef("dice_rolling.mp3");
   const { width, height } = Dimensions.get('window');
   
-
   const[pinchState,setPinchState]=useState(false);
 
     // when scale < 1, reset scale back to original (1)
@@ -77,7 +76,6 @@ const Game= ({navigation}) => {
   const [position,setPosition] = useState(new Animated.ValueXY({x:0,y:0}));
   var translateX = new Animated.Value(0);
   var translateY = new Animated.Value(0);
-  
   
   const diceSpinValue= new Animated.Value(0);
 
@@ -356,11 +354,19 @@ const stateChangePawn = ()=>
     
   },[excerpt]);
 
-  // 
+  const [imageScale,setImageScale] = useState(1);
+  // const scaleData = imageScale.interpolate({
+  //   inputRange: [0,1],
+  //   outputRange: [1,2]
+  // });
+
+
   const diceRoll=async()=>{
+    setImageScale(1);
     if(!isRotating)
     {
       setRotation(!isRotating);
+      // setImageScale(2);
     }
     if(diceFace===8)
     {
@@ -451,8 +457,6 @@ const stateChangePawn = ()=>
       }
 
     if (iDisplacement.current < 999) {
-      console.log("error occured!!!")
-      console.log(playerPositions[player.current.position + iDisplacement.current].info.movement.displacement[iCurrent_state.current])
       iSnakeLadderBase.current = playerPositions[player.current.position + iDisplacement.current].info.movement.displacement[iCurrent_state.current];
     }
     
@@ -484,7 +488,7 @@ const stateChangePawn = ()=>
      postIdCurrent.current=playerPositions[player.current.position].postID;
     
   };
-
+  const [newPosition,setNewPosition] = useState(new Animated.ValueXY({x:0,y:0}));
   const landingEvent =()=>{
     
     player.current.global_direction=1;
@@ -508,6 +512,7 @@ const stateChangePawn = ()=>
       setDiceFace(diceImage[6].imageurl)
       dice.current.iDiceFace=diceImage[6].imageurl;
     }
+    setImageScale(2);
     postIdCellMovement.current=playerPositions[player.current.position].postID;
     saveStatesFunc(playerPositions[player.current.position].info.name);
     setExcerptState(playerPositions[player.current.position].info.quote[0].name);
@@ -521,13 +526,14 @@ const stateChangePawn = ()=>
     }
 
   };
+const callX=useRef(0);
+const callY=useRef(0);
 
   const movePawnNextCell=()=>{
-    
-    playerPositionX.current=playerPositions[player.current.position].x;
-    playerPositionY.current=playerPositions[player.current.position].y;
+      playerPositionX.current=playerPositions[player.current.position].x;
+      playerPositionY.current=playerPositions[player.current.position].y;
 
-    Animated.sequence([
+      Animated.sequence([
     Animated.timing(position,{
       toValue:{x: playerPositionX.current,y: playerPositionY.current},
       useNativeDriver: true
@@ -569,9 +575,11 @@ const stateChangePawn = ()=>
     }).start(()=>{
       player.current.position=player.current.targetPosition;
       postIdCellMovement.current=playerPositions[player.current.position].postID;
+      setImageScale(2);
       saveStatesFunc(playerPositions[player.current.position].info.name);
       setExcerptState(playerPositions[player.current.position].info.quote[0].name);
       setPostName(playerPositions[player.current.position].info.name);
+      
     });
 
     
@@ -728,9 +736,7 @@ const ChatGPT=()=>{
     <Animated.View style={styles.gameContainer}>
       <View>
         <GestureHandlerRootView>
-          <Pinchable>
-        <View style={{width:380}}>
-          {/* <View> */}
+        <View style={{width:380,height:380,overflow:'hidden'}}>
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={(e) => (
@@ -738,15 +744,14 @@ const ChatGPT=()=>{
         )}>
          {
             global.config.GL_LANG_CODE==="en" ? 
-            <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380,backgroundColor: '#fff',zIndex:-1}} />
+
+            <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}],left:imageScale==1 ? 0 : ((380/2)-(playerPositionX.current+56)) ,bottom:imageScale==1?0:((380/2)+(playerPositionY.current-23))}}/>
             :
             global.config.GL_LANG_CODE==="or" && 
-            <Image source={require('../assets/game/boardOdia.jpg')} style={{width:380,height:380,backgroundColor: '#fff',zIndex:-1}} />
+            <Image source={require('../assets/game/boardOdia.jpg')} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}]}} />
           }
         </TapGestureHandler>
          </View>
-        </Pinchable>
-        
         </GestureHandlerRootView>
         { (!pinchState)?(  
       <Animated.View 
@@ -754,15 +759,13 @@ const ChatGPT=()=>{
       justifyContent:'center',
       width:40,
       height:40,
-
       bottom:46,
       left:28,
-
       transform:[{
         translateX:position.x
       },{translateY:position.y}]
-      }} >
-        <Image source={require('../assets/game/token4.png')} style={{width:40,height:40}}  />
+      }}>
+        <Image source={require('../assets/game/token4.png')} style={{width:40,height:40,opacity:imageScale==2?0.8:1}}  />
       </Animated.View>
       ):(<View></View>)}
       </View>

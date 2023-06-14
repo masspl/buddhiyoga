@@ -53,7 +53,6 @@ const RecentMoves=(props)=>{
       try {
         const value = await AsyncStorage.getItem(key);
         if(value !== null) {
-          // value previously stored
           return value;
         }
         else
@@ -61,7 +60,6 @@ const RecentMoves=(props)=>{
           return null;
         }
       } catch(e) {
-        // error reading value
         console.log("Error While fetching Data")
       }
     }
@@ -71,7 +69,6 @@ const RecentMoves=(props)=>{
         const jsonValue = JSON.stringify(value)
         await AsyncStorage.setItem(key, jsonValue)
       } catch (e) {
-        // saving error
       }
     }
 
@@ -144,7 +141,6 @@ const cellInformaion=(index)=>{
               source={source}
 	            tagsStyles={tagsStyles}
                   />
-                  <Text>asd</Text>
         </ScrollView>
   </Animated.View>
   ); 

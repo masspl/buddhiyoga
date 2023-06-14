@@ -6,7 +6,7 @@ import '../globalVariables';
 const BlockInformation = ({setrotation,rotation,excerpt,postName,postId,navigation}) => {
    
     const [isRotating, setRotation] = useState(true);
-    console.log("bl"+rotation);
+    // console.log("bl"+rotation);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
     const [postList, setPostList] = React.useState([]);
 
