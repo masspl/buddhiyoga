@@ -11,20 +11,10 @@ function MagicComponentHeader({navigation, getstorageData,status}){
                     status?
                     <TouchableWithoutFeedback onPress={()=>getstorageData()}>
                         <Image  source={require("../assets/other/booksla.png")} style={{width: 40, height: 40}} />
-                        {/* <FastImage
-      source={{ uri: '../assets/other/booksanimatesfill.gif', priority: FastImage.priority.normal }}
-      style={{ width: 200, height: 200 }}
-      resizeMode={FastImage.resizeMode.contain}
-    /> */}
                     </TouchableWithoutFeedback>
-            :
+                    :
                     <TouchableWithoutFeedback onPress={()=>getstorageData()} disabled>
                         <Image  source={require("../assets/other/booksla.png")} style={{width: 40, height: 40,opacity:0.3}} />
-                        {/* <FastImage
-      source={{ uri: '../assets/other/booksanimatesfill.gif', priority: FastImage.priority.normal }}
-      style={{ width: 200, height: 200 }}
-      resizeMode={FastImage.resizeMode.contain}
-    /> */}
                     </TouchableWithoutFeedback>
                 }
             </View>
