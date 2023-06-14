@@ -14,11 +14,11 @@ function Hamburger({navigation,resetFunction,infoFunction,resetStatus,magicStatu
                 <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{width: 115, height: 40}} />
         </View>
             </View>
-            <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"15%"}}></View>
+            <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"10%"}}></View>
             {
                 resetStatus &&
             
-            <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"35%",alignItems: 'center'}}>
+            <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"40%",alignItems: 'center'}}>
                 {/* info icons */}
                 <TouchableWithoutFeedback onPress={(e)=>{resetFunction(e)}}>
                 <Image source={require("../assets/other/reset1.png")} style={{width: 35, height: 35, opacity: 1}} />
@@ -35,7 +35,7 @@ function Hamburger({navigation,resetFunction,infoFunction,resetStatus,magicStatu
                 }
                 
                 <TouchableWithoutFeedback onPress={(e)=>{howtoplayFunction(e)}}>
-                <Image source={require("../assets/other/help.png")} style={{width: 28, height: 28}} />
+                <Image source={require("../assets/other/helpc.png")} style={{width: 35, height: 35}} />
                 </TouchableWithoutFeedback>
                 {/* <TouchableWithoutFeedback onPress={(e)=>{infoFunction(e)}}>
                 <Image source={require("../assets/other/recentmoves1.png")} style={{width: 28, height: 28}} />

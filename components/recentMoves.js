@@ -15,7 +15,7 @@ import Dice6 from "../assets/game/dice/updated/dice6.png";
 import Dice7 from "../assets/game/dice/updated/dice7.png";
 import Dice8 from "../assets/game/dice/updated/dice8.png";
 import Dice9 from "../assets/game/dice/updated/dice9.png";
-
+import RenderHtml from 'react-native-render-html';
 const RecentMoves=(props)=>{
       
     const { width, height } = Dimensions.get('window');
@@ -26,6 +26,7 @@ const RecentMoves=(props)=>{
     const [cellsContains,setCellsContains]=useState([]);
     const [Numbers,setNumbers]=useState(3);
     const [rowTapped,setRowTapped]=useState(false);
+    const [source,setNewHtml]=useState({html:"Loading..."});
 
     var playerPositions =require('../assets/game/buddhiyogaEngine.json');
 
@@ -38,13 +39,13 @@ const RecentMoves=(props)=>{
 
     async function getLastMoveData(data) { 
       var arr=[];
-      var storageData = await  getData('@playerMove');
+      var storageData = await  getData('@bufferPlayerMove');
       storageData=JSON.parse(storageData);
       storageData.slice().reverse().forEach(element => {
-        // console.log(element)
-          let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace};
-          console.log(obj);
+        if(element.hasOwnProperty('gameState')){
+          let obj={name:element.gameState.postName,cellNo:element.gameState.player.position,diceFace:element.gameState.dice.iDiceFace};
           arr.push(obj);
+        }
       });
         setCellsContains(arr);
       }
@@ -90,6 +91,8 @@ const getStorageData=async ()=>{
           })
           .then(async(response) => {
             var responseData=await response.json();
+            console.log(responseData);
+            setNewHtml({html:responseData});
             setaiData(responseData);
             setFetched(true);
             setisLoading(false);
@@ -117,6 +120,18 @@ const getStorageData=async ()=>{
       setisLoading(false);
       }
 }
+
+const tagsStyles = {
+	body: {
+	  whiteSpace: 'normal',
+	  color: 'black',
+	  // backgroudColor:'#F2D997',
+	  fontSize: 17,
+	},
+	a: {
+	  color: 'black'
+	}
+  };
     
 const cellInformaion=(index)=>{
   alert(playerPositions[index].info.name);
@@ -125,7 +140,11 @@ const cellInformaion=(index)=>{
         <Animated.View style={[{height: 400,backgroundColor: '#fff', paddingHorizontal: 10,borderTopEndRadius: 20, borderTopStartRadius: 20, justifyContent: 'flex-start',flexDirection: 'column', flex: 1}]}>
         <Text style={{color: 'rgba(88, 44, 36,1)', fontSize: 20, fontWeight: 'bold', textAlign: 'center', borderBottomColor: 'rgba(88, 44, 36,0.2)', borderBottomWidth: 1,paddingBottom: 0, lineHeight: 50}}>A thought trail</Text>
         <ScrollView style={{height: 350, paddingVertical: 0}}>
-            <Text style={{color: '#000', margin: 0, padding: 0, textAlign: "justify"}}>{aiData}{'\n\n'}</Text>
+            <RenderHtml
+              source={source}
+	            tagsStyles={tagsStyles}
+                  />
+                  <Text>asd</Text>
         </ScrollView>
   </Animated.View>
   ); 
@@ -174,7 +193,7 @@ const cellInformaion=(index)=>{
                   
                 </>
             :
-            <View>
+            <View style={{height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
             <Loader/>
             </View>
         }

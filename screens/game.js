@@ -336,11 +336,7 @@ const initializePawn = ()=>
 const stateChangePawn = ()=>
 {
   var data=playerPositions[positionConfig.initCellPos].info.name;
-  // cellInfo.current.setNativeProps({text:data});
-  // console.log("data"+data);
 
-
-  
   cellInfo.current=data;  
     Animated.timing(position,{
       toValue:{x:playerPositionX.current,y:playerPositionY.current},
@@ -361,8 +357,7 @@ const stateChangePawn = ()=>
   },[excerpt]);
 
   // 
-  const diceRoll=()=>{
-    // console.log(diceFace);
+  const diceRoll=async()=>{
     if(!isRotating)
     {
       setRotation(!isRotating);
@@ -379,24 +374,19 @@ const stateChangePawn = ()=>
     {
       sound.current="dice_rolling.mp3";
     }
-    const buttonSound = new Sound(sound.current, Sound.MAIN_BUNDLE, (error) => {
+    var buttonSound = new Sound (sound.current, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log('Failed to load sound', error);
       }
       else{
-        buttonSound.play((success) => {
-          if (success) {
-            // console.log('Sound played successfully');
-          } else {
-            // console.log('Sound playback failed');
-          }
-        });
+        buttonSound.play();
       }
     });
+
     Animated.timing(
       diceSpinValue,
     {
-      toValue: dice.current.ispinValue,
+      toValue: 1,
       duration: 200,
       easing: Easing.linear, // Easing is an additional import from react-native
       useNativeDriver: true  // To make use of native driver for performance
@@ -412,14 +402,12 @@ const stateChangePawn = ()=>
     if(iSnakeLadderBase.current==0)
     {
       dice.current.currentRoll=dice.current.iDiceCurrentRoll-1;
-      // console.log("inside if statement");
       setDiceFace(diceImage[dice.current.iDiceCurrentRoll-1].imageurl)
       dice.current.iDiceFace=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
       
     }
     else
     {
-      // console.log('inside else statement'+ diceImage[6].imageurl);
       setDiceFace(diceImage[6].imageurl)
       dice.current.iDiceFace=diceImage[6].imageurl
     }
@@ -463,6 +451,8 @@ const stateChangePawn = ()=>
       }
 
     if (iDisplacement.current < 999) {
+      console.log("error occured!!!")
+      console.log(playerPositions[player.current.position + iDisplacement.current].info.movement.displacement[iCurrent_state.current])
       iSnakeLadderBase.current = playerPositions[player.current.position + iDisplacement.current].info.movement.displacement[iCurrent_state.current];
     }
     
@@ -484,7 +474,6 @@ const stateChangePawn = ()=>
      {
       player.current.targetPosition=player.current.position+iDisplacement.current;
        movePawnToCell();
-      // cellInfo.current=playerPositions[player.current.position].info.name;  
      }
      else if(iDisplacement.current!=0)
      {
@@ -492,7 +481,6 @@ const stateChangePawn = ()=>
       movePawnNextCell();
       cellInfo.current=playerPositions[player.current.position].info.name;
      }
-    //  console.log(cellInfo.current);
      postIdCurrent.current=playerPositions[player.current.position].postID;
     
   };
@@ -524,7 +512,6 @@ const stateChangePawn = ()=>
     saveStatesFunc(playerPositions[player.current.position].info.name);
     setExcerptState(playerPositions[player.current.position].info.quote[0].name);
     setPostName(playerPositions[player.current.position].info.name);
-    // alert
   };
 
   const flyoverEvent =()=>{
@@ -536,16 +523,7 @@ const stateChangePawn = ()=>
   };
 
   const movePawnNextCell=()=>{
-    // console.log("movePawnNextCell"+iSnakeLadderBase.current);
-    if(iSnakeLadderBase.current>0)
-    {
-      dice.current.iDiceFace=diceImage[8].imageurl;
-      
-    }
-    else if(iSnakeLadderBase.current < 0)
-    {
-      dice.current.iDiceFace=diceImage[7].imageurl;
-    }
+    
     playerPositionX.current=playerPositions[player.current.position].x;
     playerPositionY.current=playerPositions[player.current.position].y;
 
@@ -574,10 +552,17 @@ const stateChangePawn = ()=>
   };
 
   const movePawnToCell=()=>{
-    // console.log("movePawnToCell");
     playerPositionX.current=playerPositions[player.current.targetPosition].x;
     playerPositionY.current=playerPositions[player.current.targetPosition].y;
-    
+    if(iSnakeLadderBase.current>0)
+    {
+      dice.current.iDiceFace=diceImage[8].imageurl;
+      
+    }
+    else if(iSnakeLadderBase.current < 0)
+    {
+      dice.current.iDiceFace=diceImage[7].imageurl;
+    }
     Animated.timing(position,{
       toValue:{x: playerPositionX.current,y:playerPositionY.current},
       useNativeDriver: true
@@ -596,12 +581,6 @@ const stateChangePawn = ()=>
   var bufferPlayerMoves=[];
   var device={deviceID:"",manufacturer:"",model:"",timeZone:"",nativeLang:"",date:""};
   const saveStatesFunc =async(postName)=>{
-    console.log("///////////////");
-      console.log(dice.current);
-      // console.log("///////////////");
-      // console.log(player.current);
-      // console.log("///////////////");
-      // console.log(diceFace);
       saveStates.dice=dice.current;
       saveStates.player=player.current;
       saveStates.iCurrent_state=iCurrent_state.current;
@@ -626,7 +605,8 @@ const stateChangePawn = ()=>
          storeData('@playerMove',storageData);
       }
 
-      var bufferStates=saveStates;
+      var bufferStates={};
+      bufferStates.gameState=saveStates;
       await DeviceInfo.getAndroidId().then((androidId) => {
         device.deviceID=androidId;
       });
@@ -678,9 +658,7 @@ const getPosts=(e)=>{
     }
   });
   postIdCurrent.current=postsid;
-  // cellInfoNow.current.setNativeProps([{text:qoute}]);
   changePage();
-  // console.log(qoute)
 }
 
   const resetGame=(e)=>{
@@ -726,14 +704,6 @@ const ChatGPT=()=>{
       }
     };
 
-
-    // const handlePanWhenDragging = (nativeEvent) =>{
-    //   if(pinchState)
-    //   {
-    //     translateX.setValue(nativeEvent.translationX);
-    //     translateY.setValue(nativeEvent.translationY);
-    //   }
-    // };
 
     const handlePanGesture = Animated.event([{nativeEvent: 
       {translationX: translateX,translationY:translateY}}], 

@@ -72,7 +72,7 @@ const App = (props)=> {
             .then(async(json) =>{
               console.log(json);
              if(json.code===200){
-              await AsyncStorage.setItem('@bufferPlayerMove','');
+              await AsyncStorage.removeItem('@bufferPlayerMove');
              }
              else if(json.code===-919){
               console.error('Error');
@@ -84,7 +84,7 @@ const App = (props)=> {
           }
       }
       else{
-        alert("you are not connected to the server....");
+        // alert("you are not connected to the server....");
       }
     });
     // setSubmitStatus(true);
