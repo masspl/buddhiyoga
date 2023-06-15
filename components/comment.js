@@ -168,6 +168,7 @@ const Comment = (props) =>{
              style={styles.input}
              autoCapitalize='none'
              autoCorrect={false}
+            
              placeholder="Type here..."
              value={postComment}
              onChangeText={newValue => setPostComment(newValue)}
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10, 
     fontSize: 11,
-    height: 30,
+    // height: 30,
     width: '55%',
     padding: 0
 },
