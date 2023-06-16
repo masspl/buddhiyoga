@@ -42,6 +42,14 @@ import Dice10 from "../assets/game/dice/updated/dice10.png";
 import Dice11 from "../assets/game/dice/updated/dice11.png";
 import Dice12 from "../assets/game/dice/updated/dice12.png";
 
+import  En from "../assets/game/board.jpg";
+import  Or from "../assets/game/boardOdia.jpg";
+import  Bn from "../assets/game/boardBengali.jpg";
+import  Gu from "../assets/game/boardGujarati.jpg";
+import  Kn from "../assets/game/boardKannada.jpg";
+import  Ta from "../assets/game/boardTamil.jpg";
+import  Te from "../assets/game/boardTelugu.jpg";
+
 import Hamburger from '../components/hamburger';
 
 const Game= ({navigation}) => {
@@ -58,7 +66,7 @@ const Game= ({navigation}) => {
   const playerPositionY=useRef(0);
   const sound=useRef("dice_rolling.mp3");
   const { width, height } = Dimensions.get('window');
-  
+  const [imageUrl,setImageUrl]=useState(global.config.GL_LANG_CODE==="or" ? Or : global.config.GL_LANG_CODE==="bn" ? Bn :global.config.GL_LANG_CODE==="gu" ? Gu :global.config.GL_LANG_CODE==="kn" ? Kn : global.config.GL_LANG_CODE==="ta" ? Ta: global.config.GL_LANG_CODE==="te" ? Te : En)
   const[pinchState,setPinchState]=useState(false);
 
     // when scale < 1, reset scale back to original (1)
@@ -403,7 +411,7 @@ const stateChangePawn = ()=>
     let min = 1;
     let max = 7;
     dice.current.iDiceCurrentRoll= min+Math.floor( Math.random() * (max - min));
-    // dice.current.iDiceCurrentRoll=1;
+    // dice.current.iDiceCurrentRoll=3;
     
     if(iSnakeLadderBase.current==0)
     {
@@ -603,6 +611,8 @@ const callY=useRef(0);
       storeData('@saveSate',saveStates);
       playerMove.push(saveStates);
       var storageData=await getData('@playerMove');
+      console.log("storageData//////////////////////////////");
+      console.log(storageData);
       if(storageData===null)
       {
         storeData('@playerMove',playerMove);
@@ -669,7 +679,7 @@ const getPosts=(e)=>{
   changePage();
 }
 
-  const resetGame=(e)=>{
+  const resetGame=async(e)=>{
    
       storeData('@saveSate',null).then(()=>{
         if(gameState==1)
@@ -682,7 +692,8 @@ const getPosts=(e)=>{
         }
        
       });
-      
+      await AsyncStorage.removeItem('@playerMove');
+      setMagicStatus(false);
     }
     
     
@@ -742,14 +753,15 @@ const ChatGPT=()=>{
           onActivated={(e) => (
               getPosts(e)
         )}>
-         {
-            global.config.GL_LANG_CODE==="en" ? 
+         {/* {
+            global.config.GL_LANG_CODE==="en" ?  */}
 
-            <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}],left:imageScale==1 ? 0 : ((380/2)-(playerPositionX.current+56)) ,bottom:imageScale==1?0:((380/2)+(playerPositionY.current-23))}}/>
-            :
+            <Image source={imageUrl} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}],left:imageScale==1 ? 0 : ((380/2)-(playerPositionX.current+56)) ,bottom:imageScale==1?0:((380/2)+(playerPositionY.current-23))}}/>
+            {/* :
             global.config.GL_LANG_CODE==="or" && 
             <Image source={require('../assets/game/boardOdia.jpg')} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}]}} />
-          }
+          } */}
+         
         </TapGestureHandler>
          </View>
         </GestureHandlerRootView>

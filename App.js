@@ -1,30 +1,18 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React,{useEffect} from 'react';
 import './globalVariables';
 import { Image } from 'react-native';
  import Game from "./screens/game";
  import Login from "./screens/login";
  import Posts from "./screens/posts";
-
  import Contact from './screens/contact';
- import Hamburger from './components/hamburger';
  import Comment from './components/comment';
  import Share from './components/share';
  import { NavigationContainer } from '@react-navigation/native';
  import { createNativeStackNavigator } from '@react-navigation/native-stack';
  import { createDrawerNavigator } from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Profile from './screens/profile';
 import Aboutus from './screens/aboutus';
 import Shop from './screens/shop';
- import Setting from './screens/setting';
 import Language from './components/language';
 import {NativeModules, Platform } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
@@ -44,12 +32,11 @@ const App = (props)=> {
   const pushDatatoDB=()=>{
     var deviceID="";
     NetInfo.fetch().then(async (state) => {
-      // console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
       if(state.isConnected)
       {
-        await DeviceInfo.getAndroidId().then((androidId) => {
+        await DeviceInfo.getAndroidId().then(async(androidId) => {
           deviceID=androidId;
+          await AsyncStorage.setItem('@deviceID', androidId);
         });
         const playerMove = await AsyncStorage.getItem('@bufferPlayerMove');
         if(playerMove!=null) {
@@ -68,7 +55,7 @@ const App = (props)=> {
             },
           };
           let response=  fetch(SAVE_STATE,data)
-            .then(response => response.json())  // promise
+            .then(response => response.json()) 
             .then(async(json) =>{
               console.log(json);
              if(json.code===200){
@@ -87,9 +74,6 @@ const App = (props)=> {
         // alert("you are not connected to the server....");
       }
     });
-    // setSubmitStatus(true);
-   
-
   }
 
 
@@ -98,17 +82,14 @@ const App = (props)=> {
     ios: NativeModules.SettingsManager?.settings?.AppleLocale || NativeModules.SettingsManager?.settings?.AppleLanguages[0],
     android: NativeModules.I18nManager.localeIdentifier,
   });
-  console.log(locale);
   var localeLangCode = locale.substring(0,2);
-  console.log(localeLangCode);
-
   switch (localeLangCode) {
       
       case 'bn':
        
           await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/");
-          await AsyncStorage.setItem("gameBoard", 'en');
-          global.config.GL_LANG_CODE='en';
+          await AsyncStorage.setItem("gameBoard", 'bn');
+          global.config.GL_LANG_CODE='bn';
           global.config.GL_LANG_NAME='Bengali';
           global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
           break;
@@ -126,8 +107,8 @@ const App = (props)=> {
       case 'hi':
       
           await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
-          await AsyncStorage.setItem("gameBoard", 'en'); 
-          global.config.GL_LANG_CODE='en';
+          await AsyncStorage.setItem("gameBoard", 'hi'); 
+          global.config.GL_LANG_CODE='hi';
           global.config.GL_LANG_NAME='Hindi';
           global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
           break;
@@ -135,12 +116,35 @@ const App = (props)=> {
       case 'gu':
      
           await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
-          await AsyncStorage.setItem("gameBoard", 'en'); 
-          global.config.GL_LANG_CODE='en';
-          global.config.GL_LANG_NAME='Gujrati';
+          await AsyncStorage.setItem("gameBoard", 'gu'); 
+          global.config.GL_LANG_CODE='gu';
+          global.config.GL_LANG_NAME='Gujarati';
           global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
           break;
-            
+     case 'kn':
+     
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'kn'); 
+          global.config.GL_LANG_CODE='kn';
+          global.config.GL_LANG_NAME='Kannada';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+    case 'ta':
+     
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'ta'); 
+          global.config.GL_LANG_CODE='ta';
+          global.config.GL_LANG_NAME='Tamil';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+    case 'te':
+     
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'te'); 
+          global.config.GL_LANG_CODE='te';
+          global.config.GL_LANG_NAME='Telugu';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
       default:
       
           await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");

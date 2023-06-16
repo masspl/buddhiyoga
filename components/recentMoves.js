@@ -1,7 +1,7 @@
 import React,{useState,useEffect, useRef} from "react";
 import { Animated,Text,ScrollView,Easing,View, SafeAreaView,Dimensions,TouchableWithoutFeedback, Image, TextInput,StyleSheet} from "react-native";
 import MagicComponentHeader from "./magicComponentHeader";
-import {AI_URL}  from '@env';
+import {AI_URL,SAVE_CHATGPT_RESPONSE}  from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from "./loader";
 import '../globalVariables';
@@ -29,27 +29,31 @@ const RecentMoves=(props)=>{
     const [upvote, setUpvote]=useState(false);
     const [downvote, setDownvote]=useState(false);
     const [commentshow, setCommentshow]=useState(false);
+    const [postComment, setPostComment]=useState("");
+    const [deviceData, setDeviceData]=useState();
     const [cellData,setCellData]=useState([]);
     const [isRotating, setRotation] = useState(true);
     const [isRotation, setisRotation] = useState(true);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
+
    
     const cellIndex = useRef();
-   
-    useEffect(()=>{
-       if(isRotating==true)
-       {
-        stopincreaseLengthFunction();
-       }
-       else
-       {
-        increaseLengthFunction();
-       }
-    },[isRotating]);
 
-    useEffect(()=>{
-         setRotation(!isRotation);
-    },[!isRotation]);
+   
+    // useEffect(()=>{
+    //    if(isRotating==true)
+    //    {
+    //     stopincreaseLengthFunction();
+    //    }
+    //    else
+    //    {
+    //     increaseLengthFunction();
+    //    }
+    // },[isRotating]);
+
+    // useEffect(()=>{
+    //      setRotation(!isRotation);
+    // },[!isRotation]);
 
 
     var playerPositions =require('../assets/game/buddhiyogaEngine.json');
@@ -61,15 +65,26 @@ const RecentMoves=(props)=>{
         }
     },[cellsContains.length])
 
+    // async function getLastMoveData(data) { 
+    //   var arr=[];
+    //   var storageData = await  getData('@bufferPlayerMove');
+    //   storageData=JSON.parse(storageData);
+    //   storageData.slice().reverse().forEach(element => {
+    //     if(element.hasOwnProperty('gameState')){
+    //       let obj={name:element.gameState.postName,cellNo:element.gameState.player.position,diceFace:element.gameState.dice.iDiceFace};
+    //       arr.push(obj);
+    //     }
+    //   });
+    //     setCellsContains(arr);
+    //   }
+
     async function getLastMoveData(data) { 
       var arr=[];
-      var storageData = await  getData('@bufferPlayerMove');
+      var storageData = await  getData('@playerMove');
       storageData=JSON.parse(storageData);
       storageData.slice().reverse().forEach(element => {
-        if(element.hasOwnProperty('gameState')){
-          let obj={name:element.gameState.postName,cellNo:element.gameState.player.position,diceFace:element.gameState.dice.iDiceFace};
+          let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace};
           arr.push(obj);
-        }
       });
         setCellsContains(arr);
       }
@@ -77,6 +92,7 @@ const RecentMoves=(props)=>{
       try {
         const value = await AsyncStorage.getItem(key);
         if(value !== null) {
+          // value previously stored
           return value;
         }
         else
@@ -84,6 +100,7 @@ const RecentMoves=(props)=>{
           return null;
         }
       } catch(e) {
+        // error reading value
         console.log("Error While fetching Data")
       }
     }
@@ -93,10 +110,12 @@ const RecentMoves=(props)=>{
         const jsonValue = JSON.stringify(value)
         await AsyncStorage.setItem(key, jsonValue)
       } catch (e) {
+        // saving error
       }
     }
 
     const getStorageData=async ()=>{
+      cellIndex.current=-1
         setClickedStatus(false);
         var recentCellStr= cellsContains.slice(0, Numbers);
         var prompt=JSON.stringify({"textToAI":recentCellStr, lang: global.config.GL_LANG_CODE});
@@ -120,6 +139,7 @@ const RecentMoves=(props)=>{
             var bufferPlayerMoves=[];
             var bufferStates={};
             var device={prompt:prompt,response:responseData};
+            setDeviceData(device);
             bufferStates.aiRequest=device;
             var bufferStorageData=await getData('@bufferPlayerMove');
             if(bufferStorageData===null)
@@ -155,53 +175,32 @@ const RecentMoves=(props)=>{
       }
       };
 
-    const upVote = (data)=>{
+    
 
-      if(upvote){
-
-        if(!downvote){
+    const upVote = ()=>{
+        if(upvote){
           setUpvote(false);
           setCommentshow(false);
-          
         }
-        
-      }
-
       else{
-        if(!downvote){
-          setUpvote(true);
-          setCommentshow(true);
-        }
-        else
           setDownvote(false);
           setUpvote(true);
           setCommentshow(true);
       }
-      
     }
-    const downVote = (data)=> {
+    const downVote = ()=> {
       
-      if(upvote){
-
-        if(!downvote){
-          setUpvote(false);
-          setDownvote(true);
-          setCommentshow(true);
-        }
-       
+      if(downvote){
+            setDownvote(false);
+            setCommentshow(false);
       }
-
       else{
-        if(!downvote){
-          setDownvote(true);
-          setCommentshow(true);
-          
-        }
-        else
-          setDownvote(false);
-          setCommentshow(false);
-          
+        setUpvote(false);
+        setDownvote(true);
+        setCommentshow(true);
+
       }
+          
     }
         
     const increaseLengthFunction = () =>{
@@ -234,15 +233,70 @@ const RecentMoves=(props)=>{
       height: lengthData
     }
         
-    const cellInformaion=(cellNo,index)=>{
-      cellIndex.current=index;
-      console.log(playerPositions[cellNo].info.quote[0].name);
+    // const cellInformaion=(cellNo,index)=>{
+    //   cellIndex.current=index;
+    //   console.log(playerPositions[cellNo].info.quote[0].name);
 
-      if(isRotating==true)
-      setisRotation(false);
-      setRotation(!isRotating);
-      // setRowTapped(true);
-      setCellData(playerPositions[cellNo].info.quote[0].name);
+    //   // if(isRotating==true)
+    //   // setisRotation(false);
+    //   // setRotation(!isRotating);
+    //   // setRowTapped(true);
+    //   setCellData(playerPositions[cellNo].info.quote[0].name);
+    // }
+    const rowTappedStatus=useRef(false);
+    const cellInformaion=(cellNo,index)=>{
+      if(clickedStatus)
+      {
+      if(cellIndex.current===index)
+        {
+          rowTappedStatus.current=true;
+          setRowTapped(!rowTapped)
+        }
+      cellIndex.current=index;
+      var randNumber=Math.floor(Math.random(playerPositions[cellNo].info.quote.length));
+      setCellData(playerPositions[cellNo].info.quote[randNumber].name);
+      }
+    }
+    const submitButonHandler = async () => {
+      // alert("akjsdaskldjsalkd");
+        var deviceId= await AsyncStorage.getItem('@deviceID');
+        // console.log(typeof(deviceId));
+        var vote='';
+        if(upvote)
+         vote='Upvote';
+        else
+        vote='Downvote';
+
+        var prompt={data: deviceData, vote: vote, commenttext: postComment};
+          try {
+            setisLoading(true);
+            await fetch(SAVE_CHATGPT_RESPONSE, {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              device:deviceId,
+              prompt:prompt,
+            }),
+            })
+            .then(async(response) => {
+              var responseData=await response.json();
+              // alert("response");
+            setisLoading(false);
+            props.navigation.goBack(null)
+            console.log(responseData);
+            
+          })
+          .done();
+        } 
+        catch (error) {
+          console.error(error);
+          setisLoading(false);
+        }
+    
+
     }
     const renderAiData = (
         <Animated.View style={[{height: 400,backgroundColor: '#fff', paddingHorizontal: 10,borderRadius: 20, justifyContent: 'flex-start',flexDirection: 'column', flex: 1}]}>
@@ -252,7 +306,54 @@ const RecentMoves=(props)=>{
               source={source}
 	            tagsStyles={tagsStyles}
                   />
-                  <Text>asd</Text>
+                  
+                  <View style={{width: "100%", padding: 10, margin: 0, flexDirection: 'row', alignItems: 'center', borderTopColor: 'rgba(0,0,0,0.4)', borderTopWidth: 1}}>
+                    <TouchableWithoutFeedback style={{}} onPress={() => upVote()}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',}}>
+                      
+                        {upvote ?
+                      <Image source={require('../assets/other/upvote96X96fl.png')} style={{width: 28, height: 28}} />
+                      :
+                      <Image source={require('../assets/other/upvote96X96la.png')} style={{width: 28, height: 28}} />
+                    }
+                      
+                      <Text style={{marginHorizontal: 5, color: upvote ? 'rgba(88, 44, 36,1)' : 'rgba(0,0,0,0.5)'}}>Upvote</Text>
+                    </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => downVote()}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginLeft: 10}}>
+                      {downvote ? 
+                        <Image source={require('../assets/other/downvote96X96fl.png')} style={{width: 28, height: 28}} />
+                        :
+                        <Image source={require('../assets/other/downvote96X96la.png')} style={{width: 28, height: 28}} />
+                      }
+                      <Text style={{marginHorizontal: 5, color: downvote ? 'rgba(88, 44, 36,1)' : 'rgba(0,0,0,0.5)'}}>Downvote</Text>
+                    </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                  {commentshow ? 
+                  <View style={{ flex: 1, flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center',paddingHorizontal: 10, paddingBottom: 10}}>
+                  <TextInput
+                          multiline={true}
+                          style={styles.input}
+                          autoCapitalize='none'
+                          autoCorrect={false}
+                          placeholder="Type here..."
+                          value={postComment}
+                          onChangeText={newValue => setPostComment(newValue)}
+                          placeholderTextColor={'rgba(0,0,0,0.4)'}
+                          
+                        />
+                         <TouchableWithoutFeedback style={{}} onPress={()=>submitButonHandler()}>
+                              <View style={{width: '25%',backgroundColor: '#563229', marginVertical: 10, borderRadius: 10, paddingHorizontal: 10}}>
+                              <Text style={[{width: '100%',textAlign: 'center',  color: '#fff',lineHeight: 40,padding: 0},styles.btnstext]}>Submit</Text>
+                              {/* <Loader/> */}
+                              </View>
+                              </TouchableWithoutFeedback>
+                              </View>
+                  :
+                  <></>
+                  }
         </ScrollView>
   </Animated.View>
   ); 
@@ -269,8 +370,9 @@ const RecentMoves=(props)=>{
 
                     {cellsContains.map((cell, index) => 
                     <>
+                    <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 5, width: '100%' }}>
                     <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo,index)}>
-                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, elevation: 10, shadowColor: '#b79972', marginVertical: 5 }}>
+                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, elevation: 10, shadowColor: '#b79972'}}>
                       
                       <View style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '25%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
                         <Text style={{ fontSize: 12, color: '#fff' }}>Cell No</Text>
@@ -280,11 +382,12 @@ const RecentMoves=(props)=>{
                      
                     </View>
                     </TouchableWithoutFeedback>
-                     <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current==index ? viewLengthStyle : {height: 0}]}>
+                     <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current===index ? (rowTapped ? {height: 0}:{height: 100} ): {height: 0}]}>
                      <View style={{padding: 10,}}>
                        <Text style={{color: '#000'}}>{cellData}</Text>
                      </View>
                    </Animated.View> 
+                   </View>
                    </>
                     )}
                   </View>
@@ -300,13 +403,6 @@ const RecentMoves=(props)=>{
                   </View>
                 </View>
             }
-            {
-              rowTapped &&
-              <View>
-                <Image source={diceFace} style={{width:"95%",height:"100%"}} resizeMode="contain"/>
-              </View>
-            }
-                  
                 </>
             :
             <View style={{height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
@@ -331,6 +427,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     width: '65%',
     paddingVertical: 5,
-    color: '#000',
+    color: '#000',
 },
 });
