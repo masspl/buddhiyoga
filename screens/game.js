@@ -166,7 +166,8 @@ const getData = async (key) => {
       iDiceFace: 0,
       iDiceRollCount: 0,
       iDiceCurrentRoll: 0,
-      ispinValue:1
+      ispinValue:1,
+      currentDiceFace: 0
     },
     diceFace:Dice7
 
@@ -180,6 +181,7 @@ const getData = async (key) => {
   const iReverseTo = useRef(0);
   const iRoll=useRef(0);
   const iOld_ReverseTo = useRef(0);
+  const currentDiceFace = useRef(0);
 
   //Player Variable
 //   var player = {
@@ -313,6 +315,7 @@ const initializePawn = ()=>
       else
       {
         let savedData=JSON.parse(data);
+        
         dice.current=savedData.dice;
         iDisplacement.current=savedData.iDisplacement;
         iSnakeLadderBase.current = savedData.iSnakeLadderBase;
@@ -412,10 +415,13 @@ const stateChangePawn = ()=>
     let max = 7;
     dice.current.iDiceCurrentRoll= min+Math.floor( Math.random() * (max - min));
     // dice.current.iDiceCurrentRoll=3;
+
+    
     
     if(iSnakeLadderBase.current==0)
     {
       dice.current.currentRoll=dice.current.iDiceCurrentRoll-1;
+      
       setDiceFace(diceImage[dice.current.iDiceCurrentRoll-1].imageurl)
       dice.current.iDiceFace=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
       
@@ -427,7 +433,10 @@ const stateChangePawn = ()=>
     }
     sound.current="dice_rolling.mp3";
     initiatePawnMovement();
+
   });
+  currentDiceFace.current=dice.current.iDiceFace;
+  console.log(dice.current.iDiceFace)
 
   if(dice.current.ispinValue==1)
   {
@@ -437,7 +446,6 @@ const stateChangePawn = ()=>
   {
     dice.current.ispinValue=1;
   }
-
   };
 
 
@@ -606,13 +614,15 @@ const callY=useRef(0);
       saveStates.iReverseTo=iOld_ReverseTo.current;
       saveStates.iRoll=iRoll.current;
       saveStates.iSnakeLadderBase=iSnakeLadderBase.current;
-      saveStates.diceFace=diceFace;
+      saveStates.diceFace=diceFace;  
+      saveStates.currentDiceFace=currentDiceFace.current;
       saveStates.postName=postName
+      console.log("savestates"+JSON.stringify(saveStates));
       storeData('@saveSate',saveStates);
       playerMove.push(saveStates);
       var storageData=await getData('@playerMove');
       console.log("storageData//////////////////////////////");
-      console.log(storageData);
+      // console.log(storageData);
       if(storageData===null)
       {
         storeData('@playerMove',playerMove);
