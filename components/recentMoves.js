@@ -39,7 +39,21 @@ const RecentMoves=(props)=>{
    
     const cellIndex = useRef();
 
-   
+    const diceImages = [
+      '',
+      require("../assets/game/dice/updated/dice1.png"),
+      require("../assets/game/dice/updated/dice2.png"),
+      require("../assets/game/dice/updated/dice3.png"),
+      require("../assets/game/dice/updated/dice4.png"),
+      require("../assets/game/dice/updated/dice5.png"),
+      require("../assets/game/dice/updated/dice6.png"),
+      require("../assets/game/dice/updated/dice7.png"),
+      require("../assets/game/dice/updated/dice8.png"),
+      require("../assets/game/dice/updated/dice9.png"),
+      
+      
+        
+    ];
     // useEffect(()=>{
     //    if(isRotating==true)
     //    {
@@ -83,9 +97,10 @@ const RecentMoves=(props)=>{
       var storageData = await  getData('@playerMove');
       storageData=JSON.parse(storageData);
       storageData.slice().reverse().forEach(element => {
-          let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace};
+          let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace,diceRoll: element.iRoll,currentDiceFace:element.currentDiceFace};
           arr.push(obj);
       });
+      console.log(arr);
         setCellsContains(arr);
       }
     const getData = async (key) => {
@@ -378,8 +393,15 @@ const RecentMoves=(props)=>{
                         <Text style={{ fontSize: 12, color: '#fff' }}>Cell No</Text>
                         <Text style={{ fontSize: 25, color: '#fff' }}>{cell.cellNo}</Text>
                       </View>
-                      <Text style={{ width: '75%', fontSize: 16, color: index >= Numbers ? 'rgba(88, 44, 36,1)' : '#fff', textTransform: 'capitalize', fontWeight: 'bold', textAlign: 'center', paddingHorizontal: 10, }}>{cell.name}</Text>
-                     
+                      <View style={{ width: '75%', paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
+                        {cell.currentDiceFace!=7 ? 
+                        
+                        <Image source={diceImages[cell.currentDiceFace]} style={{width: 30, height: 30,position:'absolute', zIndex: 1, left: 10}} />
+                        :  
+                        <Image source={diceImages[cell.diceRoll]} style={{width: 30, height: 30,position:'absolute', zIndex: 1, left: 10}} />
+                      }
+                      <Text style={{ fontSize: 16, color: index >= Numbers ? 'rgba(88, 44, 36,1)' : '#fff', textTransform: 'capitalize', fontWeight: 'bold', textAlign: 'center' }}>{cell.name}</Text>
+                     </View>
                     </View>
                     </TouchableWithoutFeedback>
                      <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current===index ? (rowTapped ? {height: 0}:{height: 100} ): {height: 0}]}>

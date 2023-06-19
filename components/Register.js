@@ -96,8 +96,8 @@ const checkUserStorage=async()=>{
       }
      } )
     }
-    const _openAppSetting = useCallback(async () => {
-      await AndroidOpenSettings.localeSettings();
+    const _openAppSetting = useCallback(() => {
+      AndroidOpenSettings.localeSettings();
     }, []);
 
     return (

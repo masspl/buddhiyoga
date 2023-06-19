@@ -29,6 +29,8 @@ const App = (props)=> {
     pushDatatoDB();
   },[]);
   
+ 
+
   const pushDatatoDB=()=>{
     var deviceID="";
     NetInfo.fetch().then(async (state) => {
@@ -83,6 +85,7 @@ const App = (props)=> {
     android: NativeModules.I18nManager.localeIdentifier,
   });
   var localeLangCode = locale.substring(0,2);
+  console.log(localeLangCode);
   switch (localeLangCode) {
       
       case 'bn':
@@ -143,6 +146,14 @@ const App = (props)=> {
           await AsyncStorage.setItem("gameBoard", 'te'); 
           global.config.GL_LANG_CODE='te';
           global.config.GL_LANG_NAME='Telugu';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+    case 'hu':
+     
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'hu'); 
+          global.config.GL_LANG_CODE='hu';
+          global.config.GL_LANG_NAME='Hungarian';
           global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
           break;
       default:

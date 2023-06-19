@@ -18,14 +18,8 @@ import {
 
 import { TouchableOpacity } from 'react-native';
 import BlockInformation from '../components/blockInformation';
-import PinchZoomView from 'react-native-pinch-zoom-view';
-import Pinchable from 'react-native-pinchable';
-
 import {
-    GestureHandlerRootView,TapGestureHandler,PinchGestureHandler,PanGestureHandler,
-    State
-} from 'react-native-gesture-handler';
-import {useAnimatedGestureHandler} from 'react-native-reanimated';
+    GestureHandlerRootView,TapGestureHandler} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import '../globalVariables';
 
@@ -49,6 +43,7 @@ import  Gu from "../assets/game/boardGujarati.jpg";
 import  Kn from "../assets/game/boardKannada.jpg";
 import  Ta from "../assets/game/boardTamil.jpg";
 import  Te from "../assets/game/boardTelugu.jpg";
+import  Hu from "../assets/game/boardHungarian.jpg";
 
 import Hamburger from '../components/hamburger';
 
@@ -66,7 +61,7 @@ const Game= ({navigation}) => {
   const playerPositionY=useRef(0);
   const sound=useRef("dice_rolling.mp3");
   const { width, height } = Dimensions.get('window');
-  const [imageUrl,setImageUrl]=useState(global.config.GL_LANG_CODE==="or" ? Or : global.config.GL_LANG_CODE==="bn" ? Bn :global.config.GL_LANG_CODE==="gu" ? Gu :global.config.GL_LANG_CODE==="kn" ? Kn : global.config.GL_LANG_CODE==="ta" ? Ta: global.config.GL_LANG_CODE==="te" ? Te : En)
+  const [imageUrl,setImageUrl]=useState(global.config.GL_LANG_CODE==="hu" ? Hu : global.config.GL_LANG_CODE==="or" ? Or : global.config.GL_LANG_CODE==="bn" ? Bn :global.config.GL_LANG_CODE==="gu" ? Gu :global.config.GL_LANG_CODE==="kn" ? Kn : global.config.GL_LANG_CODE==="ta" ? Ta: global.config.GL_LANG_CODE==="te" ? Te : En)
   const[pinchState,setPinchState]=useState(false);
 
     // when scale < 1, reset scale back to original (1)
@@ -166,7 +161,8 @@ const getData = async (key) => {
       iDiceFace: 0,
       iDiceRollCount: 0,
       iDiceCurrentRoll: 0,
-      ispinValue:1
+      ispinValue:1,
+      currentDiceFace: 0
     },
     diceFace:Dice7
 
@@ -180,6 +176,7 @@ const getData = async (key) => {
   const iReverseTo = useRef(0);
   const iRoll=useRef(0);
   const iOld_ReverseTo = useRef(0);
+  const currentDiceFace = useRef(0);
 
   //Player Variable
 //   var player = {
@@ -313,6 +310,7 @@ const initializePawn = ()=>
       else
       {
         let savedData=JSON.parse(data);
+        
         dice.current=savedData.dice;
         iDisplacement.current=savedData.iDisplacement;
         iSnakeLadderBase.current = savedData.iSnakeLadderBase;
@@ -393,7 +391,9 @@ const stateChangePawn = ()=>
         console.log('Failed to load sound', error);
       }
       else{
-        buttonSound.play();
+        buttonSound.play(()=>{
+          buttonSound.release();
+        });
       }
     });
 
@@ -412,10 +412,13 @@ const stateChangePawn = ()=>
     let max = 7;
     dice.current.iDiceCurrentRoll= min+Math.floor( Math.random() * (max - min));
     // dice.current.iDiceCurrentRoll=3;
+
+    
     
     if(iSnakeLadderBase.current==0)
     {
       dice.current.currentRoll=dice.current.iDiceCurrentRoll-1;
+      
       setDiceFace(diceImage[dice.current.iDiceCurrentRoll-1].imageurl)
       dice.current.iDiceFace=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
       
@@ -427,7 +430,10 @@ const stateChangePawn = ()=>
     }
     sound.current="dice_rolling.mp3";
     initiatePawnMovement();
+
   });
+  currentDiceFace.current=dice.current.iDiceFace;
+  // console.log(dice.current.iDiceFace)
 
   if(dice.current.ispinValue==1)
   {
@@ -437,7 +443,6 @@ const stateChangePawn = ()=>
   {
     dice.current.ispinValue=1;
   }
-
   };
 
 
@@ -606,13 +611,12 @@ const callY=useRef(0);
       saveStates.iReverseTo=iOld_ReverseTo.current;
       saveStates.iRoll=iRoll.current;
       saveStates.iSnakeLadderBase=iSnakeLadderBase.current;
-      saveStates.diceFace=diceFace;
+      saveStates.diceFace=diceFace;  
+      saveStates.currentDiceFace=currentDiceFace.current;
       saveStates.postName=postName
       storeData('@saveSate',saveStates);
       playerMove.push(saveStates);
       var storageData=await getData('@playerMove');
-      console.log("storageData//////////////////////////////");
-      console.log(storageData);
       if(storageData===null)
       {
         storeData('@playerMove',playerMove);
@@ -620,9 +624,8 @@ const callY=useRef(0);
       else{
         storageData=JSON.parse(storageData);
         storageData.push(saveStates);
-         storeData('@playerMove',storageData);
+        storeData('@playerMove',storageData);
       }
-
       var bufferStates={};
       bufferStates.gameState=saveStates;
       await DeviceInfo.getAndroidId().then((androidId) => {
@@ -653,7 +656,6 @@ const callY=useRef(0);
      if(storageData!=null && storageData.length >= 3) {
         setMagicStatus(true);
       }
-      
   };
   
 const getPosts=(e)=>{
@@ -696,47 +698,15 @@ const getPosts=(e)=>{
       setMagicStatus(false);
     }
     
-    
-    
     const magicButton=()=>{
       navigation.navigate('recentMoves');
   
     }
   const howtoplayFunction=()=>{
     navigation.navigate('Help');
-
   }
-const ChatGPT=()=>{
-  navigation.navigate('ChatGPT')
-}
-  
-  
 
-  const scalePinchGesture = new Animated.Value(1);
-    const onGestureEvent = Animated.event([{nativeEvent: {scale: scalePinchGesture}}], {
-      useNativeDriver: true,
-    });
-    const onPinchStateChange = (event) => {
-      // console.log('called');
-      if (event.nativeEvent.oldState === State.ACTIVE) {
-        Animated.spring(scalePinchGesture, {toValue: 1, useNativeDriver: true}).start();
-      }
-    };
-
-
-    const handlePanGesture = Animated.event([{nativeEvent: 
-      {translationX: translateX,translationY:translateY}}], 
-      { useNativeDriver: true });
-
-      const onHandlerPanStateChange = useCallback(() => {
-        // console.log("Changed Position")
-        translateX.setValue(0);
-        translateY.setValue(0);
-        
-      }, []);
-
-
-  return (
+return (
     <>
     <SafeAreaView style={{backgroundColor:'rgba(183,153,114,0.25)', width: width,height: height,flex: 1, flexDirection: "column",justifyContent: 'space-between'}}>
     <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={magicButton} resetStatus={true} magicStatus={magicStatus} howtoplayFunction={howtoplayFunction} />
@@ -753,15 +723,7 @@ const ChatGPT=()=>{
           onActivated={(e) => (
               getPosts(e)
         )}>
-         {/* {
-            global.config.GL_LANG_CODE==="en" ?  */}
-
             <Image source={imageUrl} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}],left:imageScale==1 ? 0 : ((380/2)-(playerPositionX.current+56)) ,bottom:imageScale==1?0:((380/2)+(playerPositionY.current-23))}}/>
-            {/* :
-            global.config.GL_LANG_CODE==="or" && 
-            <Image source={require('../assets/game/boardOdia.jpg')} style={{width:380,height:380,zIndex:-1,transform:[{scale:imageScale}]}} />
-          } */}
-         
         </TapGestureHandler>
          </View>
         </GestureHandlerRootView>
@@ -863,4 +825,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Game;
+export default Game;
