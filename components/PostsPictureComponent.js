@@ -2,7 +2,6 @@ import React,{useEffect,useState} from "react";
 import { Text ,View, StyleSheet,ActivityIndicator,TouchableOpacity } from 'react-native';
 import {Card, Button , Title ,Paragraph } from 'react-native-paper';
 import RenderHtml from 'react-native-render-html';
-import { Blurhash } from "react-native-blurhash";
 
 const PostsPictureComponent = (props) => {
   

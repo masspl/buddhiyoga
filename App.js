@@ -172,7 +172,7 @@ const App = (props)=> {
     
   function DrawerRoutes(){
     return(
-    <Drawer.Navigator useLegacyImplementation initialRouteName="Home" 
+    <Drawer.Navigator initialRouteName="Home" 
     screenOptions={{headerShown:false,
       drawerStyle:{backgroundColor: '#D5C0A4'},
       drawerItemStyle:{borderBottomWidth:1,borderColor: 'rgba(0,0,0,0.4)',width:"100%", paddingVertical: 7,paddingHorizontal:5, marginHorizontal: 0,marginVertical: 0, },

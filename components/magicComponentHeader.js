@@ -26,7 +26,9 @@ function MagicComponentHeader({navigation, getstorageData,status}){
                         <Image  source={require("../assets/other/booksla.png")} style={{width: 40, height: 40,opacity:0.3}} />
                     </TouchableWithoutFeedback>)
                     :
+                    <TouchableWithoutFeedback onPress={()=>alert("Please connect to internet...")}>
                     <Image  source={require("../assets/other/booksla.png")} style={{width: 40, height: 40,opacity:0.3}} />
+                    </TouchableWithoutFeedback>
                 }
             </View>
              <View style={{position: 'absolute', right: 5}}>

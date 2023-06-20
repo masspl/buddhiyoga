@@ -11,10 +11,7 @@ import {
   } from 'react-native';
   import { Link } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { handImage } from 'react-native-gesture-handler';
-import NetInfo from "@react-native-community/netinfo";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {JSON_VALIDATE} from '@env';
+
 const Login = () =>{
     const [isRotating, setRotation] = useState(true);
     const [rotateValueHolder,setRotateHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
@@ -35,44 +32,6 @@ const Login = () =>{
     //     fadeInView();
     //    }
     // },[isRotating]);
-    const [jsonStatus,setJsonStatus]=useState(true);
-    // useEffect(()=>{
-    //     if(!jsonStatus)
-    //         {
-    //             updateJSONCcontent();
-    //         }
-    // },[jsonStatus]);
-
-    const updateJSONCcontent = async ()=>{
-        // var json_file =require('./assets/game/buddhiyogaEngine.json'); 
-        // alert(json_file[json_file.length - 1].version);
-        NetInfo.fetch().then(async (state) => {
-            if(state.isConnected)
-            {
-            let data = {
-                  method: 'POST',
-                  credentials: 'same-origin',
-                  mode: 'same-origin',
-                  headers: {
-                    'Accept':       'application/json',
-                    'Content-Type': 'application/json',
-                    // 'Authorization': 'Basic YnVkZGhpeW9nYTpHZEpSIDdYeFUgdHQ5YyBlSFZ2IFZCcnIgVHhEdg=='
-                  },
-                };
-                let response=  fetch(JSON_VALIDATE,data)
-                  .then(response => response.json()) 
-                  .then(async(json) =>{
-                    console.log(json);
-                //    if(json.code===200){
-                //     await AsyncStorage.removeItem('@bufferPlayerMove');
-                //    }
-                //    else if(json.code===-919){
-                //     console.error('Error');
-                //    }
-                  })
-                }
-      });
-    }
     const startImageRotateFunction = () =>{
        
         Animated.timing(rotateValueHolder,{
