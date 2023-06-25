@@ -18,7 +18,7 @@ import PostBottomSticky from '../components/postBottomStickyTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Posts= (props) => {
-  console.log(props)
+  console.log(global.config.GL_LANG_NAME);
     const [postList, setPostList] = React.useState([]);
     const [postId,setPostId] = React.useState(props.route.params.postId);
     const slideUpValue= new Animated.Value(0);
@@ -36,11 +36,11 @@ const Posts= (props) => {
     },[postList.length])
 
 
-    handleBackButtonClick= () => {
-        console.log(props);
-        props.navigation.goBack(null);
-        return true;
-      }
+    // handleBackButtonClick= () => {
+    //     // console.log(props);
+    //     props.navigation.goBack(null);
+    //     return true;
+    //   }
       
     
     async function getPosts() {
@@ -80,7 +80,7 @@ const Posts= (props) => {
     
       };
       const _end = async () => {
-        console.log("hello")
+        // console.log("hello")
         return Animated.parallel([
           Animated.timing(slideDownValue, {
     

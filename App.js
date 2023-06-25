@@ -1,15 +1,15 @@
 import React,{useEffect} from 'react';
 import './globalVariables';
 import { Image } from 'react-native';
- import Game from "./screens/game";
- import Login from "./screens/login";
- import Posts from "./screens/posts";
- import Contact from './screens/contact';
- import Comment from './components/comment';
- import Share from './components/share';
- import { NavigationContainer } from '@react-navigation/native';
- import { createNativeStackNavigator } from '@react-navigation/native-stack';
- import { createDrawerNavigator } from '@react-navigation/drawer';
+import Game from "./screens/game";
+import Login from "./screens/login";
+import Posts from "./screens/posts";
+import Contact from './screens/contact';
+import Comment from './components/comment';
+import Share from './components/share';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Profile from './screens/profile';
 import Aboutus from './screens/aboutus';
 import Shop from './screens/shop';
@@ -80,13 +80,15 @@ const App = (props)=> {
 
 
   const fetchAppLang = async () => {
-  const locale = Platform.select({
-    ios: NativeModules.SettingsManager?.settings?.AppleLocale || NativeModules.SettingsManager?.settings?.AppleLanguages[0],
-    android: NativeModules.I18nManager.localeIdentifier,
-  });
-  var localeLangCode = locale.substring(0,2);
-  console.log(localeLangCode);
-  switch (localeLangCode) {
+  // const locale = Platform.select({
+    // ios: NativeModules.SettingsManager?.settings?.AppleLocale || NativeModules.SettingsManager?.settings?.AppleLanguages[0],
+    // android: NativeModules.I18nManager.localeIdentifier,
+  // });
+  
+  var localeLangCode = await AsyncStorage.getItem("selectedLanguage");
+    // var localeLangCode = locale.substring(0,2);
+    console.log(localeLangCode);
+    switch (localeLangCode) {
       
       case 'bn':
        
@@ -124,7 +126,7 @@ const App = (props)=> {
           global.config.GL_LANG_NAME='Gujarati';
           global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
           break;
-     case 'kn':
+      case 'kn':
      
           await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
           await AsyncStorage.setItem("gameBoard", 'kn'); 
@@ -244,5 +246,6 @@ const App = (props)=> {
     </>
   );
 };
- export default App;
+export default App;
  
+
