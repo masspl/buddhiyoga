@@ -12,7 +12,11 @@ const Dropdowns = ({ options, onSelect }) => {
     await AsyncStorage.setItem("selectedLanguage", option);
     onSelect(option);
     setVisible(false);
+    
   };
+
+
+  
 
   return (
     <View style={{}}>
@@ -29,6 +33,13 @@ const Dropdowns = ({ options, onSelect }) => {
 
         <View style={styles.modalContent}>
           <ScrollView>
+          <TouchableOpacity
+                key={options[0]}
+                onPress={() => handleSelect(options[0])}
+                style={styles.optionButton}
+              >
+                <Text style={{color: '#000'}}>{options[0]}</Text>
+              </TouchableOpacity>
             {options.map((option) => (
               <TouchableOpacity
                 key={option}
@@ -52,15 +63,52 @@ const Dropdown = () => {
     // Perform any additional logic with the selected option
   };
 
+  const [languages, setLanguages] = useState(global.config.GL_LIST_OF_LANG);
+  const [defaultlanguages, setdefaultLanguages] = useState(global.config.GL_DEFAULT_LANG);
 
+
+    useEffect(() => {
+      console.log(languages);
+    })
+  
+  // const fetchLanguages = async () => {
+  //   console.log("hello")
+
+  //   try {
+ 
+  //     await fetch('https://buddhiyoga.in/site/en/wp-json/tp/v1/languages/', {
+  //     method: "GET",
+  //     headers: {
+  //         "Accept": "application/json",
+  //         "Content-Type": "application/json",
+  //     },
+      
+  //     })
+  //     .then(async(response) => {
+  //       var responseData=await response.json();
+  //       setLanguages(responseData.secondary_languages);
+  //       setdefaultLanguages(responseData.default_language);
+
+
+  //     console.log(responseData);
+      
+  //   })
+  //   .done();
+  //   } 
+  //   catch (error) {
+  //     console.error(error);
+  //   }
+  //   };
+  //   fetchLanguages();
+  //   },[])
   
     // const [languages, setLanguages] = useState([]);
   
     // useEffect(() => {
     //   const fetchLanguages = async () => {
     //     try {
-    //       const response = await fetch('https://buddhiyoga.in/site/wp-json/translatepress/v1/languages');
-    //       setLanguages(response.data);
+    //       const response = await fetch('https://buddhiyoga.in/site/en/wp-json/tp/v1/languages/');
+          // setLanguages(response.data);
     //       console.log("LANGUAGES: "+JSON.stringify(response));
     //     } catch (error) {
     //       console.error('Error fetching languages:', error);

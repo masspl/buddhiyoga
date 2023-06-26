@@ -4,7 +4,7 @@ import { Text ,View, StyleSheet } from 'react-native';
 import {Card, Button , Title ,Paragraph } from 'react-native-paper';
 import RenderHtml from 'react-native-render-html';
 const PostsContentComponent = (prop) => {
-	// console.log(global.config.GL_LANG_NAME);
+	console.log(global.config.GL_LANG_NAME);
 	const [source,setNewHtml]=useState([]);
 	useEffect(()=>{
 		 getHtml();

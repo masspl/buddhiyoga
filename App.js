@@ -79,6 +79,40 @@ const App = (props)=> {
   }
 
 
+
+    useEffect(() => {
+  
+  const fetchLanguages = async () => {
+    console.log("hello")
+
+    try {
+ 
+      await fetch('https://buddhiyoga.in/site/en/wp-json/tp/v1/languages/', {
+      method: "GET",
+      headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+      },
+      
+      })
+      .then(async(response) => {
+        var responseData=await response.json();
+        global.config.GL_LIST_OF_LANG=responseData.secondary_languages;
+        global.config.GL_DEFAULT_LANG=responseData.default_language;
+
+
+      console.log(responseData);
+      
+    })
+    .done();
+    } 
+    catch (error) {
+      console.error(error);
+    }
+    };
+    fetchLanguages();
+    },[])
+
   const fetchAppLang = async () => {
   // const locale = Platform.select({
     // ios: NativeModules.SettingsManager?.settings?.AppleLocale || NativeModules.SettingsManager?.settings?.AppleLanguages[0],
