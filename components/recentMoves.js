@@ -133,7 +133,8 @@ const RecentMoves=(props)=>{
       cellIndex.current=-1
         setClickedStatus(false);
         var recentCellStr= cellsContains.slice(0, Numbers);
-        var prompt=JSON.stringify({"textToAI":recentCellStr, lang: global.config.GL_LANG_CODE});
+        var lang_code_storage=await AsyncStorage.getItem("gameBoard");
+        var prompt=JSON.stringify({"textToAI":recentCellStr, lang: lang_code_storage});
         try {
           setisLoading(true);
           await fetch(AI_URL, {

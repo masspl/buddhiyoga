@@ -55,7 +55,7 @@ const Posts= (props) => {
           lang_url+''+postId,
         );
         let responseJson = await response.json();
-        postlist=responseJson;
+        var postlist=responseJson;
         setPostList([postlist])
         
         return responseJson;

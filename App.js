@@ -109,7 +109,7 @@ const App = (props)=> {
     // android: NativeModules.I18nManager.localeIdentifier,
   // });
   
-  var localeLangCode = await AsyncStorage.getItem("selectedLanguage");
+  var localeLangCode = await AsyncStorage.getItem("gameBoard");
     // var localeLangCode = locale.substring(0,2);
     console.log(localeLangCode);
     switch (localeLangCode) {

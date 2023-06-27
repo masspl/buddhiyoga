@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import { Animated,Text, TouchableWithoutFeedback ,Easing,ScrollView,Image,View} from "react-native";
 import {WP_URL_POST}  from '@env';
 import '../globalVariables';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const BlockInformation = ({setrotation,rotation,excerpt,postName,postId,navigation}) => {
    
     const [isRotating, setRotation] = useState(true);
@@ -36,8 +36,9 @@ const BlockInformation = ({setrotation,rotation,excerpt,postName,postId,navigati
 
     async function getPosts() {
         try {
+            var POST_URL=await AsyncStorage.getItem("postUrl");
         let response = await fetch(
-            global.config.POST_URL+''+postId
+            POST_URL+''+postId
         );
         let responseJson = await response.json();
         postlist=responseJson;

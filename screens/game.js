@@ -61,8 +61,15 @@ const Game= ({navigation}) => {
   const playerPositionY=useRef(0);
   const sound=useRef("dice_rolling.mp3");
   const { width, height } = Dimensions.get('window');
-  const [imageUrl,setImageUrl]=useState(global.config.GL_LANG_CODE==="hu" ? Hu : global.config.GL_LANG_CODE==="or" ? Or : global.config.GL_LANG_CODE==="bn" ? Bn :global.config.GL_LANG_CODE==="gu" ? Gu :global.config.GL_LANG_CODE==="kn" ? Kn : global.config.GL_LANG_CODE==="ta" ? Ta: global.config.GL_LANG_CODE==="te" ? Te : En)
+  const [imageUrl,setImageUrl]=useState()
   const[pinchState,setPinchState]=useState(false);
+  useEffect(()=>{
+    async function getLanguage(){
+    var lang_code_storage=await AsyncStorage.getItem("gameBoard");
+    setImageUrl(lang_code_storage==="hu" ? Hu : lang_code_storage==="or" ? Or : lang_code_storage==="bn" ? Bn :lang_code_storage==="gu" ? Gu :lang_code_storage==="kn" ? Kn : lang_code_storage==="ta" ? Ta: lang_code_storage==="te" ? Te : En);
+    }
+    getLanguage();
+  },[])
 
     // when scale < 1, reset scale back to original (1)
     
