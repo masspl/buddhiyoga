@@ -4,7 +4,7 @@ import { Text ,View, StyleSheet } from 'react-native';
 import {Card, Button , Title ,Paragraph } from 'react-native-paper';
 import RenderHtml from 'react-native-render-html';
 const PostsContentComponent = (prop) => {
-	// console.log(global.config.GL_LANG_NAME);
+	console.log(global.config.GL_LANG_NAME);
 	const [source,setNewHtml]=useState([]);
 	useEffect(()=>{
 		 getHtml();
@@ -23,9 +23,14 @@ const PostsContentComponent = (prop) => {
 		splitContent.forEach((element,index) => {
 			var arr=[];
 			if(index>0){
+				
 				arr=element.split("</br></br>");
 				postContents.push(arr);
-			}			
+			}
+			// if(index==1){
+			// 	excerptSubtitle=
+			// 	arr=["Excerpt",]
+			// }			
 		});
 		console.log("datatype: "+postContents.length);
 		// var newContent=splitContent[1];
@@ -55,17 +60,17 @@ const PostsContentComponent = (prop) => {
     if (typeof data === 'string') {
       // Replace HTML tags with custom styles
       const replacedHTML = data
-        .replace(/<strong>/g, '').replace(/<\/strong>/g, '') // Remove <strong> tags
+        .replace(/<strong>/g, '').replace(/<\/strong>/g, '') 
 		// .replace(/<strong>(.*?)<\/strong>/g, (match, p1) => {
 		// 	return <Text style={{ fontWeight: 'bold' }}>{JSON.stringify(p1)}</Text>;
 		//   })
-        .replace(/<em>/g, '').replace(/<\/em>/g, '') // Remove <em> tags
-        .replace(/<\/br>/g, '\n')//.replace(/<\/br>/g, '\n\n') // Remove <h1> tags
-        .replace(/<span>/g, '').replace(/<\/span>/g, '') // Remove <h2> tags
+        .replace(/<em>/g, '').replace(/<\/em>/g, '') 
+        .replace(/<\/br>/g, '\n')
+        .replace(/<span>/g, '').replace(/<\/span>/g, '') 
         .replace(/<hr>/g, '').replace(/<br \/>/g, '')
 		.replace(/<!-- Start of Story  --/g, '').replace(/<!-- End of Story. --/g, '')
 		.replace(/<!-- Start On the gameboard. --/g, '').replace(/<!-- End of On the gameboard. --/g, '')
-		.replace(/<!---->/g, '').replace(/<\/p>/g, '')
+		.replace(/<!---->/g, '').replace(/<\/p>/g, '').replace(/<p>/g, '')
 		; // Remove <h3> tags
 
       return (
@@ -85,7 +90,22 @@ const PostsContentComponent = (prop) => {
 			))} */}
 
 			{data.map((key,index) => (	
+				<>
+				{index == 1 ?
 				<Card style={Styles.container}>
+					<Card.Content>
+						<View key={index}>			
+							<Text style={{color: '#000',fontWeight: 'bold', fontSize: 18}}>Excerpt</Text>
+							<Text style={{color: '#000', fontSize: 16}}>{renderHTML(prop.subTitle)}</Text>
+						</View>
+				
+					</Card.Content>
+
+				</Card>
+				:
+				<></>
+			}
+			<Card style={Styles.container}>
 					<Card.Content>
 						<View key={index}>			
 							<Text style={{color: '#000',fontWeight: 'bold', fontSize: 18}}>{renderHTML(key[0])}{'\n'}</Text>
@@ -95,6 +115,7 @@ const PostsContentComponent = (prop) => {
 					</Card.Content>
 
 				</Card>
+			</>
 			))}
 		  </View>
 

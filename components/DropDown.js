@@ -2,16 +2,92 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, TouchableWithoutFeedback, ScrollView,Dimensions } from 'react-native';
 // import axios from 'axios';
-const Dropdowns = ({ options, onSelect }) => {
+const Dropdowns = ({ options }) => {
   const [visible, setVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelect = async(option) => {
     setSelectedOption(option);
-    global.config.GL_LANG_NAME=option;
-    await AsyncStorage.setItem("selectedLanguage", option);
-    onSelect(option);
     setVisible(false);
+    switch (option) {
+      case 'bn':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'bn');
+          global.config.GL_LANG_CODE='bn';
+          global.config.GL_LANG_NAME='Bengali';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+    
+      case 'or':
+        alert("or");
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'or');
+          global.config.GL_LANG_CODE='or';
+          global.config.GL_LANG_NAME='Odia';
+          global.config.POST_URL="https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/";
+          break;
+      
+      case 'mr':
+            await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/mr/wp-json/wp/v2/posts/");
+            await AsyncStorage.setItem("gameBoard", 'mr');
+            global.config.GL_LANG_CODE='mr';
+            global.config.GL_LANG_NAME='Marathi';
+            global.config.POST_URL="https://buddhiyoga.in/site/mr/wp-json/wp/v2/posts/";
+            break;
+          
+      case 'hi':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/hi/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'hi'); 
+          global.config.GL_LANG_CODE='hi';
+          global.config.GL_LANG_NAME='Hindi';
+          global.config.POST_URL="https://buddhiyoga.in/site/hi/wp-json/wp/v2/posts/";
+          break;
+    
+      case 'gu':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/gu/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'gu'); 
+          global.config.GL_LANG_CODE='gu';
+          global.config.GL_LANG_NAME='Gujarati';
+          global.config.POST_URL="https://buddhiyoga.in/site/gu/wp-json/wp/v2/posts/";
+          break;
+      case 'kn':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'kn'); 
+          global.config.GL_LANG_CODE='kn';
+          global.config.GL_LANG_NAME='Kannada';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+    case 'ta':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/ta/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'ta'); 
+          global.config.GL_LANG_CODE='ta';
+          global.config.GL_LANG_NAME='Tamil';
+          global.config.POST_URL="https://buddhiyoga.in/site/ta/wp-json/wp/v2/posts/";
+          break;
+    case 'te':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'te'); 
+          global.config.GL_LANG_CODE='te';
+          global.config.GL_LANG_NAME='Telugu';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+    case 'hu':
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'hu'); 
+          global.config.GL_LANG_CODE='hu';
+          global.config.GL_LANG_NAME='Hungarian';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+      default:
+      
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("gameBoard", 'en'); 
+          global.config.GL_LANG_CODE='en';
+          global.config.GL_LANG_NAME='English';
+          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          break;
+   }
+   await AsyncStorage.setItem("selectedLanguage", option);  
   };
 
   return (
@@ -45,38 +121,11 @@ const Dropdowns = ({ options, onSelect }) => {
   );
 };
 
-// Example usage
 const Dropdown = () => {
-  const handleDropdownSelect = (option) => {
-    console.log('Selected option:', option);
-    // Perform any additional logic with the selected option
-  };
-
-
-  
-    // const [languages, setLanguages] = useState([]);
-  
-    // useEffect(() => {
-    //   const fetchLanguages = async () => {
-    //     try {
-    //       const response = await fetch('https://buddhiyoga.in/site/wp-json/translatepress/v1/languages');
-    //       setLanguages(response.data);
-    //       console.log("LANGUAGES: "+JSON.stringify(response));
-    //     } catch (error) {
-    //       console.error('Error fetching languages:', error);
-    //     }
-    //   };
-  
-    //   fetchLanguages();
-    // }, []);
-  
-  // const dropdownOptions = ['Bengali', 'Odia', 'Hindi','Gujarati', 'Kannada', 'Tamil', 'Telugu', 'Hungarian', 'English', 'Marathi'];
   const dropdownOptions = ['bn', 'or', 'hi','gu', 'ka', 'ta', 'te', 'hn', 'en', 'mr'];
-
-
   return (
     <View style={styles.container}>
-      <Dropdowns options={dropdownOptions} onSelect={handleDropdownSelect} />
+      <Dropdowns options={dropdownOptions}/>
     </View>
   );
 };

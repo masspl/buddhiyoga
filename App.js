@@ -27,6 +27,7 @@ const App = (props)=> {
   useEffect(() => {
     fetchAppLang();
     pushDatatoDB();
+    // fetchLanguages();
   },[]);
   
  
@@ -78,8 +79,31 @@ const App = (props)=> {
     });
   }
 
+  const fetchLanguages = async () => {
+    try {
+ 
+      await fetch('https://buddhiyoga.in/buddhiyogaapi/api/getLanguages/', {
+      method: "GET",
+      headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+      },
+      
+      })
+      .then(async(response) => {
+        var responseData=await response.json();
+        global.config.GL_LIST_OF_LANG=responseData;
+      console.log(responseData);
+      
+    })
+    .done();
+    } 
+    catch (error) {
+      console.error(error);
+    }
+    };
 
-  const fetchAppLang = async () => {
+    const fetchAppLang = async () => {
   // const locale = Platform.select({
     // ios: NativeModules.SettingsManager?.settings?.AppleLocale || NativeModules.SettingsManager?.settings?.AppleLanguages[0],
     // android: NativeModules.I18nManager.localeIdentifier,
@@ -92,7 +116,7 @@ const App = (props)=> {
       
       case 'bn':
        
-          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
           await AsyncStorage.setItem("gameBoard", 'bn');
           global.config.GL_LANG_CODE='bn';
           global.config.GL_LANG_NAME='Bengali';
@@ -108,23 +132,33 @@ const App = (props)=> {
           global.config.GL_LANG_NAME='Odia';
           global.config.POST_URL="https://buddhiyoga.in/site/or/wp-json/wp/v2/posts/";
           break;
+      
+      case 'mr':
+      
+          console.log("mr");
+            await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/mr/wp-json/wp/v2/posts/");
+            await AsyncStorage.setItem("gameBoard", 'mr');
+            global.config.GL_LANG_CODE='mr';
+            global.config.GL_LANG_NAME='Marathi';
+            global.config.POST_URL="https://buddhiyoga.in/site/mr/wp-json/wp/v2/posts/";
+            break;
           
       case 'hi':
       
-          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/hi/wp-json/wp/v2/posts/");
           await AsyncStorage.setItem("gameBoard", 'hi'); 
           global.config.GL_LANG_CODE='hi';
           global.config.GL_LANG_NAME='Hindi';
-          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          global.config.POST_URL="https://buddhiyoga.in/site/hi/wp-json/wp/v2/posts/";
           break;
     
       case 'gu':
      
-          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/gu/wp-json/wp/v2/posts/");
           await AsyncStorage.setItem("gameBoard", 'gu'); 
           global.config.GL_LANG_CODE='gu';
           global.config.GL_LANG_NAME='Gujarati';
-          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          global.config.POST_URL="https://buddhiyoga.in/site/gu/wp-json/wp/v2/posts/";
           break;
       case 'kn':
      
@@ -136,11 +170,11 @@ const App = (props)=> {
           break;
     case 'ta':
      
-          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/");
+          await AsyncStorage.setItem("postUrl", "https://buddhiyoga.in/site/ta/wp-json/wp/v2/posts/");
           await AsyncStorage.setItem("gameBoard", 'ta'); 
           global.config.GL_LANG_CODE='ta';
           global.config.GL_LANG_NAME='Tamil';
-          global.config.POST_URL="https://buddhiyoga.in/site/en/wp-json/wp/v2/posts/";
+          global.config.POST_URL="https://buddhiyoga.in/site/ta/wp-json/wp/v2/posts/";
           break;
     case 'te':
      
@@ -174,7 +208,7 @@ const App = (props)=> {
     
   function DrawerRoutes(){
     return(
-    <Drawer.Navigator initialRouteName="Home" 
+    <Drawer.Navigator useLegacyImplementation initialRouteName="Home" 
     screenOptions={{headerShown:false,
       drawerStyle:{backgroundColor: '#D5C0A4'},
       drawerItemStyle:{borderBottomWidth:1,borderColor: 'rgba(0,0,0,0.4)',width:"100%", paddingVertical: 7,paddingHorizontal:5, marginHorizontal: 0,marginVertical: 0, },
@@ -248,4 +282,3 @@ const App = (props)=> {
 };
 export default App;
  
-
