@@ -34,17 +34,11 @@ const styles = StyleSheet.create({
     tabView:{
         width:"100%",
         height: 55,
-        
-        paddingVertical:4,
-        flexDirection:"row",
-        flex: 1,
         position: "absolute",
         justifyContent: "center",
-        bottom: 60,
+        bottom: 0,
         zIndex: 1,
         backgroundColor:'#b79972',
-
-
     }
 })
 

@@ -10,7 +10,7 @@ const PostsContentComponent = (prop) => {
 	},[]);
 
 	const getHtml=()=>{
-		
+		console.log(prop.content);
 		var splitContent=prop.content.split("<!-- Start -->");
 		var postContents=[];
 		// console.log("Length: "+splitContent)
@@ -54,7 +54,7 @@ const PostsContentComponent = (prop) => {
   };
 
   const renderHTML = (data) => {
-	console.log("data: "+typeof(data));
+	console.log("data: "+data);
     if (typeof data === 'string') {
       // Replace HTML tags with custom styles
       const replacedHTML = data
@@ -68,7 +68,7 @@ const PostsContentComponent = (prop) => {
         .replace(/<hr>/g, '').replace(/<br \/>/g, '')
 		.replace(/<!-- Start of Story  --/g, '').replace(/<!-- End of Story. --/g, '')
 		.replace(/<!-- Start On the gameboard. --/g, '').replace(/<!-- End of On the gameboard. --/g, '')
-		.replace(/<!---->/g, '').replace(/<\/p>/g, '').replace(/<p>/g, '').replace('&#8217;', "'")
+		.replace(/<!---->/g, '').replace(/<\/p>/g, '').replace(/<p>/g, '').replace("&#8217;", "'").replace('&#8211;', "-")
 		; // Remove <h3> tags
 
       return (
@@ -90,29 +90,29 @@ const PostsContentComponent = (prop) => {
 			{data.map((key,index) => (	
 				<>
 				{index == 1 ?
-				<Card style={Styles.container}>
-					<Card.Content>
+				<View style={Styles.container}>
+					<View style={Styles.cardContent}>
 						<View key={index}>			
-							<Text style={{color: '#000',fontWeight: 'bold', fontSize: 18}}>Excerpt</Text>
-							<Text style={{color: '#000', fontSize: 16}}>{renderHTML(prop.subTitle)}</Text>
+							<Text style={Styles.headings}>Excerpt</Text>
+							<Text style={Styles.contents}>{renderHTML(prop.subTitle)}</Text>
 						</View>
 				
-					</Card.Content>
+					</View>
 
-				</Card>
+				</View>
 				:
 				<></>
 			}
-			<Card style={Styles.container}>
-					<Card.Content>
+			<View style={Styles.container}>
+					<View style={Styles.cardContent}>
 						<View key={index}>			
-							<Text style={{color: '#000',fontWeight: 'bold', fontSize: 18}}>{renderHTML(key[0])}{'\n'}</Text>
-							<Text style={{color: '#000', fontSize: 16}}>{renderHTML(key[1])}</Text>
+							<Text style={Styles.headings}>{renderHTML(key[0])}</Text>
+							<Text style={Styles.contents}>{renderHTML(key[1])}</Text>
 						</View>
 				
-					</Card.Content>
+						</View>
 
-				</Card>
+				</View>
 			</>
 			))}
 		  </View>
@@ -139,9 +139,35 @@ export default PostsContentComponent;
 const Styles = StyleSheet.create({
 	container :{
 		alignContent:'center',
-		marginBottom:20,
-    // marginHorizontal: 10,
-    padding:10,
-	backgroundColor:'#F2D997'
-	}
+		marginVertical:10,
+    marginHorizontal: 10,
+    paddingHorizontal:20,
+    // backgroundColor:'#F2D997',
+    backgroundColor:'#F2D997',
+	borderRadius: 15,
+	borderWidth: 1,
+	// elevation: 1,
+	borderColor: 'rgba(0,0,0,0.2)',
+
+	},
+	cardContent:{
+		// borderRadius: 20,
+	},
+	headings:{
+		width: '100%',
+			paddingVertical:20,
+		textAlign: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#594039',
+		borderColor: 'rgba(0,0,0,0.4)',
+		
+		borderBottomWidth: 1,
+	  },
+	  contents:{
+		width: '100%',
+		paddingVertical:20,
+		fontSize: 15,
+		color: '#000',
+	  }
 })

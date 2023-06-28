@@ -139,10 +139,9 @@ const Posts= (props) => {
 
     return (<>
     <SafeAreaView style={styles.cardViewOverAll}>
-            <View style={{backgroundColor:"#cfc19f", position: 'relative'}}>
+            <View style={{ position: 'relative'}}>
               <Postsheader navigation={props.navigation}/>
               {/* <FloatingFont increaseFont={increaseSize} decreaseFont={decreaseFont} sharePost={sharePost} postID={postId} /> */}
-              <PostBottomSticky increaseFont={increaseSize} decreaseFont={decreaseFont} postShare={sharePost} postComment={postComment}/>
               
             {
             (postList.length>0) ?( 
@@ -213,7 +212,9 @@ const Posts= (props) => {
         }
         
           </View>
-           <View style={{width:"100%",height:"40%",backgroundColor:"#cfc19f"}}></View>
+           <View style={{width:"100%",height:"40%", backgroundColor: 'rgba(183,153,114,0.25)',}}></View>
+           <PostBottomSticky increaseFont={increaseSize} decreaseFont={decreaseFont} postShare={sharePost} postComment={postComment}/>
+
            </SafeAreaView>
     
     </>);
@@ -227,12 +228,14 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         width:"100%",
         height:"100%",
-        backgroundColor: "#cfc19f"
+        // backgroundColor: "#cfc19f",
+        // backgroundColor: 'rgba(183,153,114,0.25)',
     },
     cardViewOverAll:{
         width:"100%",
         height:"100%",
-        backgroundColor:'#cfc19f',
+        // backgroundColor:'#cfc19f',
+        backgroundColor: 'rgba(183,153,114,0.25)',
         // marginVertical:20,
         
     },

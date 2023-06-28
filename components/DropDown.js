@@ -129,20 +129,22 @@ const Dropdowns = ({ options }) => {
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
-
+        {/* <View style={{}}> */}
         <View style={styles.modalContent}>
-          <ScrollView>
+          <Text style={styles.selectheadings}>Select Language</Text>
+          <ScrollView style={{width: '100%'}}> 
             {options.map((option) => (
               <TouchableOpacity
                 key={option}
                 onPress={() => handleSelect(option)}
                 style={styles.optionButton}
               >
-                <Text style={{color: '#000'}}>{option}</Text>
+                <Text style={{color: '#000', fontSize: 16}}>{option}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
+        {/* </View> */}
       </Modal>
     </View>
   );
@@ -181,6 +183,17 @@ const styles = {
         fontWeight: 'bold',
         color: '#594039',
 	},
+  selectheadings:{
+    width: '100%',
+		paddingVertical:20,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#594039',
+    borderColor: 'rgba(0,0,0,0.4)',
+    backgroundColor:'rgba(183,153,114,0.25)',
+    borderBottomWidth: 1,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -190,13 +203,20 @@ const styles = {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+    bottom: 0,
     backgroundColor: 'white',
-    padding: 20,
+    paddingHorizontal: 0,
+    borderColor: 'rgba(0,0,0,0.2)',
+    borderWidth: 1,
     marginTop: 'auto',
-    maxHeight: 200,
+    height: '50%',
   },
   optionButton: {
-    paddingVertical: 10,
+    paddingVertical: 20,
+    width: '100%',
+    
+    borderBottomWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
     alignItems: 'center',
   },
 };
