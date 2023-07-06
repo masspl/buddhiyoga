@@ -29,7 +29,7 @@ import Dice3 from "../assets/game/dice/updated/dice3.png";
 import Dice4 from "../assets/game/dice/updated/dice4.png";
 import Dice5 from "../assets/game/dice/updated/dice5.png";
 import Dice6 from "../assets/game/dice/updated/dice6.png";
-import Dice7 from "../assets/game/dice/updated/dice7.png";
+import Dice7 from "../assets/game/dice/updated/dice7770.3.gif";
 import Dice8 from "../assets/game/dice/updated/dice8.png";
 import Dice9 from "../assets/game/dice/updated/dice9.png";
 import Dice10 from "../assets/game/dice/updated/dice10.png";
@@ -63,6 +63,7 @@ const Game= ({navigation}) => {
   const { width, height } = Dimensions.get('window');
   const [imageUrl,setImageUrl]=useState()
   const[pinchState,setPinchState]=useState(false);
+  
   useEffect(()=>{
     async function getLanguage(){
     var lang_code_storage=await AsyncStorage.getItem("gameBoard");
@@ -184,6 +185,7 @@ const getData = async (key) => {
   const iRoll=useRef(0);
   const iOld_ReverseTo = useRef(0);
   const currentDiceFace = useRef(0);
+  const diceStatus=useRef(true);
 
   //Player Variable
 //   var player = {
@@ -293,6 +295,7 @@ const initializePawn = ()=>
     
       if(data=='null' || data==null || data==undefined )
       {
+        // console.log("data false");
         dice.current=initialStates.dice;
         iDisplacement.current=initialStates.iDisplacement;
         iSnakeLadderBase.current = initialStates.iSnakeLadderBase;
@@ -316,6 +319,7 @@ const initializePawn = ()=>
       }
       else
       {
+        // console.log("data true");
         let savedData=JSON.parse(data);
         
         dice.current=savedData.dice;
@@ -375,6 +379,10 @@ const stateChangePawn = ()=>
 
 
   const diceRoll=async()=>{
+    
+
+    diceStatus.current=false;
+    
     setImageScale(1);
     if(!isRotating)
     {
@@ -418,20 +426,23 @@ const stateChangePawn = ()=>
     let min = 1;
     let max = 7;
     dice.current.iDiceCurrentRoll= min+Math.floor( Math.random() * (max - min));
-    // dice.current.iDiceCurrentRoll=3;
+    // dice.current.iDiceCurrentRoll=5;
 
-    
-    
+
+    // console.log("iSnakeLadderBase"+iSnakeLadderBase.current);
     if(iSnakeLadderBase.current==0)
     {
-      dice.current.currentRoll=dice.current.iDiceCurrentRoll-1;
       
+      dice.current.currentRoll=dice.current.iDiceCurrentRoll-1;
       setDiceFace(diceImage[dice.current.iDiceCurrentRoll-1].imageurl)
       dice.current.iDiceFace=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
+     
+      
       
     }
     else
     {
+      
       setDiceFace(diceImage[6].imageurl)
       dice.current.iDiceFace=diceImage[6].imageurl
     }
@@ -467,13 +478,23 @@ const stateChangePawn = ()=>
       if (iCurrent_state.current == 999) {
         iCurrent_state.current = iOld_state.current;
       }
+      
 
 
       iDisplacement.current = playerPositions[player.current.position].info.movement.displacement[iOld_state.current];
 
-
+      
       if (iDisplacement.current == 0) {
         iDisplacement.current = playerPositions[player.current.position].info.movement.displacement[(iRoll.current* 3) + iOld_state.current];
+   
+     if(iDisplacement.current==-62 || iDisplacement.current==0 || (player.current.position + iDisplacement.current)>72){
+      setTimeout(() => {
+        diceStatus.current=true
+        setDiceFace(diceImage[6].imageurl)
+        dice.current.iDiceFace=diceImage[6].imageurl
+      }, 1000);
+     }
+
       }
 
     if (iDisplacement.current < 999) {
@@ -501,10 +522,12 @@ const stateChangePawn = ()=>
      }
      else if(iDisplacement.current!=0)
      {
+      // console.log(iDisplacement.current);
       dice.current.iDiceCurrentRoll=iDisplacement.current;
       movePawnNextCell();
       cellInfo.current=playerPositions[player.current.position].info.name;
      }
+     
      postIdCurrent.current=playerPositions[player.current.position].postID;
     
   };
@@ -519,6 +542,8 @@ const stateChangePawn = ()=>
     
       setDiceFace(diceImage[8].imageurl);
       dice.current.iDiceFace=diceImage[8].imageurl;
+    
+      
       
     }
     else if(iSnakeLadderBase.current < 0)
@@ -526,12 +551,16 @@ const stateChangePawn = ()=>
       
       setDiceFace(diceImage[7].imageurl);
       dice.current.iDiceFace=diceImage[7].imageurl;
+    
     }
     else
     {
       setDiceFace(diceImage[6].imageurl)
       dice.current.iDiceFace=diceImage[6].imageurl;
+    
     }
+    diceStatus.current=true;
+
     setImageScale(2);
     postIdCellMovement.current=playerPositions[player.current.position].postID;
     saveStatesFunc(playerPositions[player.current.position].info.name);
@@ -550,6 +579,7 @@ const callX=useRef(0);
 const callY=useRef(0);
 
   const movePawnNextCell=()=>{
+    
       playerPositionX.current=playerPositions[player.current.position].x;
       playerPositionY.current=playerPositions[player.current.position].y;
 
@@ -589,6 +619,8 @@ const callY=useRef(0);
     {
       dice.current.iDiceFace=diceImage[7].imageurl;
     }
+    diceStatus.current=true;
+
     Animated.timing(position,{
       toValue:{x: playerPositionX.current,y:playerPositionY.current},
       useNativeDriver: true
@@ -718,8 +750,7 @@ return (
     <SafeAreaView style={{backgroundColor:'rgba(183,153,114,0.25)', width: width,height: height,flex: 1, flexDirection: "column",justifyContent: 'space-between'}}>
     <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={magicButton} resetStatus={true} magicStatus={magicStatus} howtoplayFunction={howtoplayFunction} />
 
-    <View style={[{flex:1,
-    width: width, alignItems: 'center', flexDirection: 'row',justifyContent: 'center'},styles.container]} >
+    <View style={[{flex:1, width: width, alignItems: 'center', flexDirection: 'row',justifyContent: 'center'}]} >
     
     <Animated.View style={styles.gameContainer}>
       <View>
@@ -764,12 +795,13 @@ return (
         
         width:45,
         height:45,
-        borderRadius:10,        
+        borderRadius:10,      
+
         transform: [{rotate: spin}]
     
     }}>
       
-      <TouchableOpacity onPress={() => {diceRoll()}} style={{justifyContent:'center', alignItems:'center',zIndex:-1}}>
+      <TouchableOpacity onPress={() => {diceRoll()}} style={{justifyContent:'center', alignItems:'center',zIndex:-1}} disabled={diceStatus.current==false ? true : false}>
       
       <Animated.Image ref={diceFaceFrame} source={diceFace} 
       style={{width:"95%",height:"100%"}}
@@ -801,9 +833,9 @@ return (
 const styles = StyleSheet.create({
   container:{
     
-    position:'absolute',
-    marginTop:'25%',
-    zIndex:1
+    // position:'absolute',
+    // marginTop:'25%',
+    // zIndex:1
     
   },
   gameContainer:{

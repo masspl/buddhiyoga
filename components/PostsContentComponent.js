@@ -10,7 +10,8 @@ const PostsContentComponent = (prop) => {
 	},[]);
 
 	const getHtml=()=>{
-		console.log(prop.content);
+		console.log("dataall"+prop.content);
+		console.log(prop.subTitle);
 		var splitContent=prop.content.split("<!-- Start -->");
 		var postContents=[];
 		// console.log("Length: "+splitContent)
@@ -54,10 +55,11 @@ const PostsContentComponent = (prop) => {
   };
 
   const renderHTML = (data) => {
-	console.log("data: "+data);
+	// console.log("data: "+data);
     if (typeof data === 'string') {
       // Replace HTML tags with custom styles
       const replacedHTML = data
+	    .replace("&#8217;", "'").replace('&#8211;', "-")
         .replace(/<strong>/g, '').replace(/<\/strong>/g, '') 
 		// .replace(/<strong>(.*?)<\/strong>/g, (match, p1) => {
 		// 	return <Text style={{ fontWeight: 'bold' }}>{JSON.stringify(p1)}</Text>;
@@ -68,7 +70,7 @@ const PostsContentComponent = (prop) => {
         .replace(/<hr>/g, '').replace(/<br \/>/g, '')
 		.replace(/<!-- Start of Story  --/g, '').replace(/<!-- End of Story. --/g, '')
 		.replace(/<!-- Start On the gameboard. --/g, '').replace(/<!-- End of On the gameboard. --/g, '')
-		.replace(/<!---->/g, '').replace(/<\/p>/g, '').replace(/<p>/g, '').replace("&#8217;", "'").replace('&#8211;', "-")
+		.replace(/<!---->/g, '').replace(/<\/p>/g, '').replace(/<p>/g, '')
 		; // Remove <h3> tags
 
       return (
