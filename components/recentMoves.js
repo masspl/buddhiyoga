@@ -35,7 +35,7 @@ const RecentMoves=(props)=>{
     const [isRotating, setRotation] = useState(true);
     const [isRotation, setisRotation] = useState(true);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
-
+    
    
     const cellIndex = useRef();
 
@@ -93,6 +93,15 @@ const RecentMoves=(props)=>{
     //   }
 
     async function getLastMoveData(data) { 
+      var bufferPlayerMovedata=await getData('@bufferPlayerMove');
+      var bufferPlayerMovedata1=JSON.parse(bufferPlayerMovedata);
+      for (let i = 0; i <= bufferPlayerMovedata1.length; i++) {
+        console.log("bufferPlayerMovedata"+JSON.stringify(bufferPlayerMovedata1[0])+'\n');
+      }
+      // bufferPlayerMovedata1.forEach((element, index) =>{
+      //   console.log("bufferPlayerMovedata"+JSON.parse(element)[index]);
+      // })
+      
       var arr=[];
       var storageData = await  getData('@playerMove');
       storageData=JSON.parse(storageData);
@@ -388,7 +397,7 @@ const RecentMoves=(props)=>{
                     <>
                     <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 5, width: '100%' }}>
                     <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo,index)}>
-                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, elevation: 10, shadowColor: '#b79972'}}>
+                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, shadowColor: '#b79972'}}>
                       
                       <View style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '25%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
                         <Text style={{ fontSize: 12, color: '#fff' }}>Cell No</Text>
@@ -405,7 +414,7 @@ const RecentMoves=(props)=>{
                      </View>
                     </View>
                     </TouchableWithoutFeedback>
-                     <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current===index ? (rowTapped ? {height: 0}:{height: 100} ): {height: 0}]}>
+                     <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current===index ? (rowTapped ? {height: 0}:{height: 'auto'} ): {height: 0}]}>
                      <View style={{padding: 10,}}>
                        <Text style={{color: '#000'}}>{cellData}</Text>
                      </View>
