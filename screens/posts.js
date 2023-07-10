@@ -18,7 +18,7 @@ import PostBottomSticky from '../components/postBottomStickyTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Posts= (props) => {
-  console.log(global.config.GL_LANG_NAME);
+  // console.log(global.config.GL_LANG_NAME);
     const [postList, setPostList] = React.useState([]);
     const [postId,setPostId] = React.useState(props.route.params.postId);
     const slideUpValue= new Animated.Value(0);

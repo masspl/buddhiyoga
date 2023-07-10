@@ -34,6 +34,7 @@ const RecentMoves=(props)=>{
     const [cellData,setCellData]=useState([]);
     const [isRotating, setRotation] = useState(true);
     const [isRotation, setisRotation] = useState(true);
+    const [totalDays, setTotalDays]=useState(1)
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
     
    
@@ -93,11 +94,29 @@ const RecentMoves=(props)=>{
     //   }
 
     async function getLastMoveData(data) { 
-      var bufferPlayerMovedata=await getData('@bufferPlayerMove');
-      var bufferPlayerMovedata1=JSON.parse(bufferPlayerMovedata);
-      for (let i = 0; i <= bufferPlayerMovedata1.length; i++) {
-        console.log("bufferPlayerMovedata"+JSON.stringify(bufferPlayerMovedata1[0])+'\n');
-      }
+      // var bufferPlayerMovedata=await getData('@bufferPlayerMove');
+      // var bufferPlayerMovedata1=JSON.parse(bufferPlayerMovedata);
+      // var deviceInformaion=[];
+      
+      // console.log("date1"+(bufferPlayerMovedata1[0].deviceInformaion.date));
+      // console.log("date2"+(bufferPlayerMovedata1[bufferPlayerMovedata1.length-1].deviceInformaion.date));
+
+      // const date1=new Date(bufferPlayerMovedata1[0].deviceInformaion.date);
+      // const date2=new Date(bufferPlayerMovedata1[bufferPlayerMovedata1.length-1].deviceInformaion.date);
+      // const oneDay = 1000 * 60 * 60 * 24;
+      // const diffInTime = date2.getTime() - date1.getTime(); 
+      // const diffInDays = Math.round(diffInTime / oneDay);
+      // console.log("days"+diffInDays);
+      // console.log("days"+diffInTime);
+
+      // for (let index = 0; index < bufferPlayerMovedata1.length; index++) {
+      //   let obj={index:index,data:bufferPlayerMovedata1[index].deviceInformaion}
+      //   deviceInformaion.push(obj);
+   
+      // deviceInformaion.data = bufferPlayerMovedata1[index].deviceInformaion;
+      
+      // }
+      // console.log(deviceInformaion);
       // bufferPlayerMovedata1.forEach((element, index) =>{
       //   console.log("bufferPlayerMovedata"+JSON.parse(element)[index]);
       // })
@@ -105,11 +124,25 @@ const RecentMoves=(props)=>{
       var arr=[];
       var storageData = await  getData('@playerMove');
       storageData=JSON.parse(storageData);
-      storageData.slice().reverse().forEach(element => {
-          let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace,diceRoll: element.iRoll,currentDiceFace:element.currentDiceFace};
+      console.log(storageData[0]);
+      var date1=new Date(storageData[0].deviceInformation.date);
+      var date2=new Date(storageData[storageData.length-1].deviceInformation.date);
+      var oneDay = 1000 * 60 * 60 * 24;
+      const diffInTime = date2.getTime() - date1.getTime(); 
+      var diffInDays = Math.round(diffInTime / oneDay);
+      setTotalDays(diffInDays==0?1:diffInDays);
+      // console.log("days"+diffInDays);
+      // console.log(storageData);
+      storageData.slice().reverse().forEach((element,index) => {
+      
+        var rollDate=new Date(storageData[index].deviceInformation.date);
+        var diffInTime = date2.getTime() - rollDate.getTime(); 
+        var diffInDay = Math.round(diffInTime / oneDay);
+        // console.log(diffInDays);
+        let obj={name:element.postName,cellNo:element.player.position,diceFace:element.dice.iDiceFace,diceRoll: element.iRoll,currentDiceFace:element.currentDiceFace,dayNumber:diffInDay};
           arr.push(obj);
       });
-      console.log(arr);
+      // console.log(arr);
         setCellsContains(arr);
       }
     const getData = async (key) => {
@@ -388,7 +421,7 @@ const RecentMoves=(props)=>{
           {
             cellsContains.length > 0 ? 
           
-             <><MagicComponentHeader navigation={props.navigation} getstorageData={getStorageData} status={clickedStatus}/>
+             <><MagicComponentHeader navigation={props.navigation} getstorageData={getStorageData} status={clickedStatus} totalDays={totalDays}/>
              <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', alignItems: 'center', flexWrap: 'wrap', padding: 10 }}>
                 <ScrollView style={{ width: '100%', height: '100%' }}>
                   <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'center', flexWrap: 'wrap', padding: 0, width: '100%' }}>
@@ -399,17 +432,25 @@ const RecentMoves=(props)=>{
                     <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo,index)}>
                     <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, shadowColor: '#b79972'}}>
                       
-                      <View style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '25%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
-                        <Text style={{ fontSize: 12, color: '#fff' }}>Cell No</Text>
-                        <Text style={{ fontSize: 25, color: '#fff' }}>{cell.cellNo}</Text>
-                      </View>
-                      <View style={{ width: '75%', paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
+                      <View style={{justifyContent: 'space-around', flexDirection: 'row', padding: 10,borderTopLeftRadius: 4, borderBottomLeftRadius: 4, backgroundColor: 'rgba(183,153,114,1)',alignItems: 'center', width: '35%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,1)',}}>
                         {cell.currentDiceFace!=7 ? 
                         
-                        <Image source={diceImages[cell.currentDiceFace]} style={{width: 30, height: 30,position:'absolute', zIndex: 1, left: 10}} />
+                        <Image source={diceImages[cell.currentDiceFace]} style={{width: 30, height: 30 }} />
                         :  
-                        <Image source={diceImages[cell.diceRoll]} style={{width: 30, height: 30,position:'absolute', zIndex: 1, left: 10}} />
-                      }
+                        <Image source={diceImages[cell.diceRoll]} style={{width: 30, height: 30 }} />
+                        }
+                      
+                      <View style={{  flex: 1, justifyContent: 'center', flexDirection: "column",alignItems: 'center' }}>
+                        <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Cell No</Text>
+                        <Text style={{ fontSize: 22, color: '#fff' }}>{cell.cellNo}</Text>
+                      </View>
+                      </View>
+                      {/* <View style={{flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
+                        <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Day No</Text>
+                        <Text style={{ fontSize: 22, color: '#fff' }}>{cell.dayNumber==0?1:cell.dayNumber}/{totalDays}</Text>
+                      </View> */}
+                      <View style={{ width: '60%', paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
+                        
                       <Text style={{ fontSize: 16, color: index >= Numbers ? 'rgba(88, 44, 36,1)' : '#fff', textTransform: 'capitalize', fontWeight: 'bold', textAlign: 'center' }}>{cell.name}</Text>
                      </View>
                     </View>

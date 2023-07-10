@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
-function MagicComponentHeader({navigation, getstorageData,status}){
+function MagicComponentHeader({navigation, getstorageData,status,totalDays}){
     const [netStatus,setNetStatus] =React.useState(false);
     React.useEffect(() => {
             NetInfo.fetch().then(async (state) => {
@@ -31,6 +31,10 @@ function MagicComponentHeader({navigation, getstorageData,status}){
                     </TouchableWithoutFeedback>
                 }
             </View>
+            <View style={{position: 'absolute', left: 5, borderColor: 'rgba(88, 44, 36,1)', borderWidth: 0.8, borderRadius: 7}}>
+                <Text style={{ fontSize: 12, color: '#fff', backgroundColor: 'rgba(88, 44, 36,1)', paddingHorizontal: 10, paddingVertical: 2, borderTopLeftRadius: 7, borderTopRightRadius: 7}}>Days</Text>
+                <Text style={{ fontSize: 17, color: '#fff', textAlign: 'center', }}>{totalDays}</Text>
+            </View>
              <View style={{position: 'absolute', right: 5}}>
              <TouchableWithoutFeedback onPress={()=>navigation.goBack(null)}>
             <Image  source={require("../assets/other/crossla.png")} style={{width: 30, height: 30, opacity: .8}} />
@@ -45,3 +49,6 @@ function MagicComponentHeader({navigation, getstorageData,status}){
 }
 
 export default MagicComponentHeader;
+
+
+

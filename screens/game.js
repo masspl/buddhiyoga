@@ -653,18 +653,7 @@ const callY=useRef(0);
       saveStates.diceFace=diceFace;  
       saveStates.currentDiceFace=currentDiceFace.current;
       saveStates.postName=postName
-      storeData('@saveSate',saveStates);
-      playerMove.push(saveStates);
-      var storageData=await getData('@playerMove');
-      if(storageData===null)
-      {
-        storeData('@playerMove',playerMove);
-      }
-      else{
-        storageData=JSON.parse(storageData);
-        storageData.push(saveStates);
-        storeData('@playerMove',storageData);
-      }
+     
       var bufferStates={};
       bufferStates.gameState=saveStates;
       await DeviceInfo.getAndroidId().then((androidId) => {
@@ -680,7 +669,22 @@ const callY=useRef(0);
       device.nativeLang=global.config.GL_LANG_CODE;
       var date = new Date();
       device.date=date;
-      console.log(device.date);
+
+      saveStates.deviceInformation=device;
+      storeData('@saveSate',saveStates);
+      playerMove.push(saveStates);
+      var storageData=await getData('@playerMove');
+      if(storageData===null)
+      {
+        storeData('@playerMove',playerMove);
+      }
+      else{
+        storageData=JSON.parse(storageData);
+        storageData.push(saveStates);
+        storeData('@playerMove',storageData);
+      }
+      
+      // console.log(device.date);
       bufferStates.deviceInformaion=device;
       bufferPlayerMoves.push(bufferStates);
       var bufferStorageData=await getData('@bufferPlayerMove');
@@ -735,6 +739,7 @@ const getPosts=(e)=>{
        
       });
       await AsyncStorage.removeItem('@playerMove');
+      await AsyncStorage.removeItem('@bufferPlayerMove');
       setMagicStatus(false);
     }
     
