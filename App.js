@@ -63,7 +63,7 @@ const App = (props)=> {
               console.log(json);
              if(json.code===200){
               await AsyncStorage.removeItem('@bufferPlayerMove');
-             }
+              console.log('bufferPlayerMove deleteds')             }
              else if(json.code===-919){
               console.error('Error');
              }

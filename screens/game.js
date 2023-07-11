@@ -47,8 +47,7 @@ import  Hu from "../assets/game/boardHungarian.jpg";
 
 import Hamburger from '../components/hamburger';
 
-const Game= ({navigation}) => {
-  
+const Game=({navigation}) => {  
   const postIdCurrent =useRef(551);
   const postIdCellMovement=useRef(551);
   const diceFaceFrame = useRef(null);
@@ -66,10 +65,12 @@ const Game= ({navigation}) => {
   
   useEffect(()=>{
     async function getLanguage(){
+      
     var lang_code_storage=await AsyncStorage.getItem("gameBoard");
     setImageUrl(lang_code_storage==="hu" ? Hu : lang_code_storage==="or" ? Or : lang_code_storage==="bn" ? Bn :lang_code_storage==="gu" ? Gu :lang_code_storage==="kn" ? Kn : lang_code_storage==="ta" ? Ta: lang_code_storage==="te" ? Te : En);
     }
     getLanguage();
+
   },[])
 
     // when scale < 1, reset scale back to original (1)
@@ -363,6 +364,15 @@ const stateChangePawn = ()=>
   useEffect(()=>{
     
       initializePawn();
+      async function getBuffermoveps(){
+        var bufferPlayerMovedata=await getData('@bufferPlayerMove');
+        if(bufferPlayerMovedata!=null){
+      console.log(JSON.parse(bufferPlayerMovedata)[0]);
+    }  
+    else
+    console.log('sblankrps')
+    }
+      getBuffermoveps();
 
   },[gameState]);
 
@@ -739,7 +749,6 @@ const getPosts=(e)=>{
        
       });
       await AsyncStorage.removeItem('@playerMove');
-      await AsyncStorage.removeItem('@bufferPlayerMove');
       setMagicStatus(false);
     }
     

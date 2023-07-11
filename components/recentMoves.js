@@ -432,7 +432,7 @@ const RecentMoves=(props)=>{
                     <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo,index)}>
                     <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, shadowColor: '#b79972'}}>
                       
-                      <View style={{justifyContent: 'space-around', flexDirection: 'row', padding: 10,borderTopLeftRadius: 4, borderBottomLeftRadius: 4, backgroundColor: 'rgba(183,153,114,1)',alignItems: 'center', width: '35%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,1)',}}>
+                      <View style={{justifyContent: 'space-around', flexDirection: 'row', padding: 10,borderTopLeftRadius: 4, borderBottomLeftRadius: 4, backgroundColor: 'rgba(183,153,114,1)',alignItems: 'center', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,1)',}}>
                         {cell.currentDiceFace!=7 ? 
                         
                         <Image source={diceImages[cell.currentDiceFace]} style={{width: 30, height: 30 }} />
@@ -440,19 +440,21 @@ const RecentMoves=(props)=>{
                         <Image source={diceImages[cell.diceRoll]} style={{width: 30, height: 30 }} />
                         }
                       
-                      <View style={{  flex: 1, justifyContent: 'center', flexDirection: "column",alignItems: 'center' }}>
-                        <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Cell No</Text>
-                        <Text style={{ fontSize: 22, color: '#fff' }}>{cell.cellNo}</Text>
-                      </View>
+                     
                       </View>
                       {/* <View style={{flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
                         <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Day No</Text>
                         <Text style={{ fontSize: 22, color: '#fff' }}>{cell.dayNumber==0?1:cell.dayNumber}/{totalDays}</Text>
                       </View> */}
-                      <View style={{ width: '60%', paddingHorizontal: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', position: 'relative'}}>
-                        
+                      {/* <View style={{ width: '80%', flexDirection: 'row', alignItems: 'center', position: 'relative'}}> */}
+                      <View style={{  justifyContent: 'center', flexDirection: "column",alignItems: 'center', width: '20%', padding: 10}}>
+                        <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Cell No</Text>
+                        <Text style={{ fontSize: 25, color: 'rgba(183,153,114,1)' }}>{cell.cellNo}</Text>
+                      </View>
+                      <View style={{justifyContent: 'center', width: '60%'}}>
                       <Text style={{ fontSize: 16, color: index >= Numbers ? 'rgba(88, 44, 36,1)' : '#fff', textTransform: 'capitalize', fontWeight: 'bold', textAlign: 'center' }}>{cell.name}</Text>
-                     </View>
+                      </View>
+                     {/* </View> */}
                     </View>
                     </TouchableWithoutFeedback>
                      <Animated.View style={[{width: '100%', backgroundColor: '#fff', borderBottomEndRadius: 10, borderBottomStartRadius: 10},cellIndex.current===index ? (rowTapped ? {height: 0}:{height: 'auto'} ): {height: 0}]}>
