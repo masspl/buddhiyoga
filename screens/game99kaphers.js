@@ -18,7 +18,7 @@ import {
 
 import { TouchableOpacity } from 'react-native';
 import BlockInformation from '../components/blockInformation';
-import {PanGestureHandler,State ,
+import {
     GestureHandlerRootView,TapGestureHandler} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import '../globalVariables';
@@ -36,7 +36,7 @@ import Dice10 from "../assets/game/dice/updated/dice10.png";
 import Dice11 from "../assets/game/dice/updated/dice11.png";
 import Dice12 from "../assets/game/dice/updated/dice12.png";
 
-import  En from "../assets/game/board.jpg";
+import  En from "../assets/game/bonards990.1.png";
 import  Or from "../assets/game/boardOdia.jpg";
 import  Bn from "../assets/game/boardBengali.jpg";
 import  Gu from "../assets/game/boardGujarati.jpg";
@@ -759,61 +759,26 @@ const getPosts=(e)=>{
   const howtoplayFunction=()=>{
     navigation.navigate('Help');
   }
-useEffect(()=>{
-  if(imageScale===1)
-  {
-    setPanEnabled(false)
-  }
-  else{
-    setPanEnabled(true);
-  }
-},[imageScale]);
-
-var imageTranslateX = useRef(new Animated.Value(0));
- var imageTranslateY = useRef(new Animated.Value(0));
- const [imageTranslate,setImageTranslate] = useState(new Animated.ValueXY({x:0,y:0}));
-   var handleGesture = Animated.event([{nativeEvent: {translationX: imageTranslateX.current,translationY:imageTranslateY.current}}], { useNativeDriver: true });
-   const handlePinchStateChange = ({ nativeEvent }) => {
-    if(nativeEvent.state===State.END || nativeEvent.state===State.CANCELLED)
-    {
-      // alert("hello")
-      console.log(nativeEvent.translationX,nativeEvent.translationY)
-     Animated.timing(imageTranslateX.current,{
-            toValue:1,
-            useNativeDriver: true
-            }).start();
-       Animated.timing(imageTranslateY.current,{
-            toValue:1,
-            useNativeDriver: true
-            }).start();
-          }
-        }
 
 return (
     <>
-    <SafeAreaView style={{backgroundColor:'rgba(183,153,114,0.25)', width: width,height: height,flex: 1, flexDirection: "column",justifyContent: 'space-between'}}>
+    <SafeAreaView style={{backgroundColor:'#f7c894', width: width,height: height,flex: 1, flexDirection: "column",justifyContent: 'space-between'}}>
     <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={magicButton} resetStatus={true} magicStatus={magicStatus} howtoplayFunction={howtoplayFunction} />
 
-    <View style={[{flex:1, width: width, alignItems: 'center', flexDirection: 'row',justifyContent: 'center'}]} >
+    <View style={[{width: width, alignItems: 'center', flexDirection: 'row',justifyContent: 'center',height: '65.25%'}]} >
     
     <Animated.View style={styles.gameContainer}>
-    <Animated.View style={{width:380,height:380,overflow:'hidden'}}>
-      {/* <Animated.View style={{}}> */}
-        <GestureHandlerRootView>
-        <PanGestureHandler onGestureEvent={handleGesture} enabled={panEnabled} simultaneousHandlers={[pinchRef]} shouldCancelWhenOutside onHandlerStateChange={handlePinchStateChange}>
-        {/* <Animated.View style={{width:380,height:380,overflow:'hidden',}}> */}
-        <Animated.View style={{width:380,height:380,}}>
+      <View style={{backgroundColor: 'yellow',height:520}}>
+        <GestureHandlerRootView >
+        <View style={{width:380,height:520,overflow:'hidden'}}>
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={(e) => (
               getPosts(e)
         )}>
-            <Animated.Image source={imageUrl} ref={pinchRef} style={{width:380,height:380,zIndex:-1,
-            transform:[{scale:imageScale}],left:imageScale==1 ? 0 : ((380/2)-(playerPositionX.current+56)) ,bottom:imageScale==1?0:((380/2)+(playerPositionY.current-23)),translateY : imageTranslateY.current,translateX : imageTranslateX.current }}>
-                  </Animated.Image>
+            <Image source={imageUrl} style={{width:380,height:520,zIndex:-1,transform:[{scale:imageScale}],left:imageScale==1 ? 0 : ((380/2)-(playerPositionX.current+56)) ,bottom:imageScale==1?0:((380/2)+(playerPositionY.current-23))}}/>
         </TapGestureHandler>
-         </Animated.View>
-         </PanGestureHandler>
+         </View>
         </GestureHandlerRootView>
         { (!pinchState)?(  
       <Animated.View 
@@ -823,28 +788,34 @@ return (
       height:40,
       bottom:46,
       left:28,
+      position: 'absolute',
       transform:[{
         translateX:position.x
       },{translateY:position.y}]
       }}>
-        <Animated.Image source={require('../assets/game/token4.png')} style={{width:40,height:40,opacity:imageScale==2?0.8:1,translateX:imageTranslateX.current,translateY:imageTranslateY.current}}></Animated.Image>
+        <Image source={require('../assets/game/token4.png')} style={{width:40,height:40,opacity:imageScale==2?0.8:1}}  />
       </Animated.View>
       ):(<View></View>)}
-      </Animated.View>
       <View style={{
-      flex:1,
+        // backgroundColor:'#fff',
+        zIndex: 1,
+        bottom: 0,
+        right: 20,
+        position: 'absolute',
+      // flex:1,
       flexDirection:"row",
       alignItems:'center',
-      justifyContent:'center',
-      width:"100%",
-      bottom:0,
-      height:"10%"
+      justifyContent: 'flex-end',
+      // width:"100%",
+      // bottom:0,
+      height:"7%",
+      padding: 0,
       }}>
       { (!pinchState)?(
       <Animated.View style={{
         
-        width:45,
-        height:45,
+        width:35,
+        height:35,
         borderRadius:10,      
 
         transform: [{rotate: spin}]
@@ -866,12 +837,14 @@ return (
     }
 
       </View>
+      </View>
+      
 
     </Animated.View>
     
    </View>
  
-    <View style={{ marginTop:'0%',width:"100%", height:"15%",justifyContent:'flex-end'}} >
+    <View style={{ marginTop:'0%',width:"100%", height:"22%",justifyContent:'flex-end', maxHeight: '25%'}} >
    <BlockInformation setrotation={(e)=>setRotation(e)}rotation={isRotating} excerpt={excerpt} postName={postName} postId={postIdCellMovement.current} navigation={navigation} />        
    </View>
   
@@ -890,12 +863,14 @@ const styles = StyleSheet.create({
   },
   gameContainer:{
     // alignContent:'center',
-    justifyContent:'center',
+    justifyContent:'space-between',
+    marginTop:0,
     alignItems: "center",
     width:"100%",
-    height:"80%",
+    height:"100%",
     marginHorizontal:"0%",
-    zIndex:2
+    zIndex:2,
+    // backgroundColor:'green'
   },
   CircleShape: {
     position:'absolute',

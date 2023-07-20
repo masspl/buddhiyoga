@@ -130,7 +130,7 @@ const RecentMoves=(props)=>{
       var oneDay = 1000 * 60 * 60 * 24;
       const diffInTime = date2.getTime() - date1.getTime(); 
       var diffInDays = Math.round(diffInTime / oneDay);
-      setTotalDays(diffInDays==0?1:diffInDays);
+      setTotalDays(30);
       // console.log("days"+diffInDays);
       // console.log(storageData);
       storageData.slice().reverse().forEach((element,index) => {
@@ -430,9 +430,9 @@ const RecentMoves=(props)=>{
                     <>
                     <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', flex: 1, marginVertical: 5, width: '100%' }}>
                     <TouchableWithoutFeedback key={index} onPress={()=>cellInformaion(cell.cellNo,index)}>
-                    <View key={index} style={{ alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, shadowColor: '#b79972'}}>
+                    <View key={index} style={{height: 70, alignItems: 'center', flex: 1, flexDirection: 'row', width: "100%", paddingVertical: 0, backgroundColor: index >= Numbers ? '#fff' : 'rgba(183,153,114,1)', borderRadius: 5, borderColor: 'rgba(0,0,0,0.05)', borderWidth: 1, shadowColor: '#b79972'}}>
                       
-                      <View style={{justifyContent: 'space-around', flexDirection: 'row', padding: 10,borderTopLeftRadius: 4, borderBottomLeftRadius: 4, backgroundColor: 'rgba(183,153,114,1)',alignItems: 'center', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,1)',}}>
+                      <View style={{height: '100%',justifyContent: 'space-around', flexDirection: 'row', padding: 0,borderTopLeftRadius: 4, borderBottomLeftRadius: 4, backgroundColor: 'rgba(183,153,114,1)',alignItems: 'center', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,1)',}}>
                         {cell.currentDiceFace!=7 ? 
                         
                         <Image source={diceImages[cell.currentDiceFace]} style={{width: 30, height: 30 }} />
@@ -442,14 +442,14 @@ const RecentMoves=(props)=>{
                       
                      
                       </View>
-                      {/* <View style={{flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 10, justifyContent: 'center', flexDirection: "column", alignItems: 'center', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
+                      <View style={{flex: 1, backgroundColor: 'rgba(183,153,114,1)', padding: 0, justifyContent: 'center', flexDirection: "column", alignItems: 'center', height: '100%', width: '20%', borderRightWidth: 1, borderRightColor: 'rgba(255,255,255,0.5)' }}>
                         <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Day No</Text>
-                        <Text style={{ fontSize: 22, color: '#fff' }}>{cell.dayNumber==0?1:cell.dayNumber}/{totalDays}</Text>
-                      </View> */}
+                        <Text style={{ fontSize: 25, color: '#fff' }}>{cell.dayNumber==0?1:cell.dayNumber}/{totalDays}</Text>
+                      </View>
                       {/* <View style={{ width: '80%', flexDirection: 'row', alignItems: 'center', position: 'relative'}}> */}
-                      <View style={{  justifyContent: 'center', flexDirection: "column",alignItems: 'center', width: '20%', padding: 10}}>
+                      <View style={{  justifyContent: 'center', flexDirection: "column",alignItems: 'center',height: '100%', width: '20%', padding: 0,borderRightWidth: 1, borderRightColor: index >= Numbers ?'rgba(183,153,114,1)':'rgba(255,255,255,0.5)'}}>
                         <Text style={{ fontSize: 12, color: 'rgba(88, 44, 36,1)', fontWeight: '500' }}>Cell No</Text>
-                        <Text style={{ fontSize: 25, color: 'rgba(183,153,114,1)' }}>{cell.cellNo}</Text>
+                        <Text style={{ fontSize: 25, color: index >= Numbers ? 'rgba(183,153,114,1)':'#fff' }}>{cell.cellNo}</Text>
                       </View>
                       <View style={{justifyContent: 'center', width: '60%'}}>
                       <Text style={{ fontSize: 16, color: index >= Numbers ? 'rgba(88, 44, 36,1)' : '#fff', textTransform: 'capitalize', fontWeight: 'bold', textAlign: 'center' }}>{cell.name}</Text>
@@ -462,6 +462,9 @@ const RecentMoves=(props)=>{
                        <Text style={{color: '#000'}}>{cellData}</Text>
                      </View>
                    </Animated.View> 
+                   <View style={{width: '100%',}}>
+                      <Text style={{ fontSize: 14, color: 'rgba(0,0,0,0.25)',fontWeight: 'bold', textAlign: 'right', paddingHorizontal: 10}}>{(totalDays-(cell.dayNumber==0?1:cell.dayNumber))==0?"Today":totalDays-(cell.dayNumber==0?1:cell.dayNumber)+" days ago"}</Text>
+                      </View>
                    </View>
                    </>
                     )}
