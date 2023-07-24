@@ -8,6 +8,8 @@ import {
     Easing,
     Text,
     TouchableWithoutFeedback,
+    ScrollView,
+    Dimensions
   } from 'react-native';
   import { Link } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -104,9 +106,51 @@ const Login = () =>{
         setRotation(!isRotating);
     }
 
+    const scrollViewRef = useRef();
+    const [currentPage, setCurrentPage] = useState(0);
+  
+    const handleScroll = (event) => {
+        console.log(event.nativeEvent.contentOffset.x+"hello"+event.nativeEvent.layoutMeasurement.width)
+      const page = Math.round(event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width);
+      console.log(page)
+      setCurrentPage(page);
+    };
+    
+  
+    // const handleSwipe = (pageIndex) => {
+    //   if (scrollViewRef.current) {
+    //     const offset = pageIndex * Dimensions.get('window').width;
+    //     scrollViewRef.current.scrollTo({ x: offset, y: 0, animated: true });
+    //   }
+    // };
+  
+    const images = [
+        require('../assets/login/MinistryEducation.png'),
+        require('../assets/login/IKS.png'),
+        require('../assets/login/MinistryEducation.png'),
+        require('../assets/login/IKS.png'),
+        require('../assets/login/MinistryEducation.png'),
+        require('../assets/login/IKS.png'),   
+              
+      ];
+      useEffect(()=>{
+        
+        const toggle = 
+        setInterval(() => {
+            setCurrentPage(currentPage === images.length - 1 ? 0 : currentPage + 1);
+        }, 2000);
+        console.log(currentPage);
+    
+        return () => clearInterval(toggle);
+      })
     return(
         <>
-        <View style={styles.screen}>
+    <View style={styles.screen}>
+    <View style={{ width: '100%', alignItems: 'center',height:'100%', justifyContent:'center',}}>
+       
+        <View style={{width: '100%', justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'center', height: '22%',}}>
+        <Image source={require("../assets/login/buddhiyoga_logo.png")} style={{width:120,height:120}} />
+        </View>
            {/* logo */}
            <TouchableWithoutFeedback onPress={()=>checkOnPress()}>
            <Animated.Image  style={[styles.logo,
@@ -116,9 +160,9 @@ const Login = () =>{
             </Animated.Image>
             </TouchableWithoutFeedback>
             {/* line */}
-            <Animated.View style={[styles.logoShadow,viewLengthStyle]}></Animated.View>
+            {/* <Animated.View style={[styles.logoShadow,viewLengthStyle]}></Animated.View> */}
             {/* button */}
-         <Animated.View style={{width: 300,marginVertical: 25,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim,}}>
+         <Animated.View style={{width: '100%',marginVertical: 25,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim,}}>
         <Link to={{screen:"Game"}}>
         <TouchableOpacity style={{backgroundColor: 'rgba(126,85,52,1)' ,width: 300,
         borderRadius: 10,
@@ -128,15 +172,31 @@ const Login = () =>{
         </TouchableOpacity>
         </Link>
         </Animated.View >
-        
         </View>
-        <View>
-                        <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
-                            <Image source={require("../assets/login/MinistryEducation.png")} style={{width:103,height:90}}/>
+        </View>
+       
+       {/* <View style={{flexDirection: 'row'}}> */}
+        <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        {images.map((image, index) => (
+          <View style={{alignItems: 'center', flexDirection: 'row', padding: 10, width: Dimensions.get('screen').width/3}}>
+          <Image key={index} source={image} style={{ width: 100, height: (index==0||index%2==0)?90: 100 }}  />
+          
+          </View>
+        ))}
+      
+        </ScrollView>
+        {/* </View> */}
+        {/* <Image source={require("../assets/login/MinistryEducation.png")} style={{width:100,height:100}}/>
                             <Image source={require("../assets/login/IKS.png")} style={{width:100,height:100}}/>
-                            <Image source={require("../assets/login/buddhiyoga_logo.png")} style={{width:80,height:90}}/>
-                        </View>
-            </View>
+                            <Image source={require("../assets/login/buddhiyoga_logo.png")} style={{width:100,height:100}}/> */}
+  
         </>
     )   
 }
@@ -144,8 +204,11 @@ const styles = StyleSheet.create({
     screen:{
         alignItems:"center",
         justifyContent:'center',
+        flexDirection: 'column',
         width:"100%",
         height:"80%",
+        // backgroundColor: 'red'
+       
         // opacity:0.7
     },
     logo:{
